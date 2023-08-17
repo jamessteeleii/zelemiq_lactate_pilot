@@ -1,5 +1,5 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|f78a1d22c8b87514|||||||||||||||
+.Random.seed|object|8c65933bf7519b8b|||||||||||||||
 add_adj_data|function|1a9ea3e9e4fa9dcc|||||||||||||||
 combine_adj_plots|function|f98841619adbdfdc|||||||||||||||
 combine_plots|function|7f9b3eda8c87ab6c|||||||||||||||
@@ -21,23 +21,27 @@ make_individual_adj_preds_plot_tiff|function|3407d820307b7213|||||||||||||||
 make_individual_data_plot_tiff|function|7e08187c3ac760b9|||||||||||||||
 make_individual_preds_plot_tiff|function|2b96452d6ed8969e|||||||||||||||
 make_model_adj_checks|function|66520631a37db24f|||||||||||||||
+make_model_adj_checks_tiff|function|50eb39e38f64f260|||||||||||||||
 make_model_adj_plot_tiff|function|e998967b65627212|||||||||||||||
 make_model_checks|function|fad92cbb84876cdf|||||||||||||||
+make_model_checks_tiff|function|88c0bb08642da5dc|||||||||||||||
 make_model_plot_tiff|function|1faec564cd3a51cf|||||||||||||||
 model|stem|6b334bc3b23a5e19|f3249b4ecf290e96|6beacca627a06724|1816327236||t19586.5204856957s|2864f67b01e0b2a7|187513|rds|local|vector|||0.04||
 model_adj|stem|fcb74284e2fa8f88|2eaa8f98f4b2afce|77f74f42ce86d449|1279204218||t19586.6293368402s|47f2ec56e18183f6|205473|rds|local|vector|||0.04||
-model_adj_checks|stem|d9e1431bed16f63e|31c7fc3dd16f92a7|f4d83f714fe7c5b6|1873723817||t19586.6346391694s|ced4a115ebcd226c|71712|rds|local|vector|||0.38||
+model_adj_checks|stem|8422d9a6579b4711|9b4fcc088f0b5969|7e30d52a38539bc3|1873723817||t19586.7828596379s|6281f79619f6778a|80|rds|local|vector|||2.28||
+model_adj_checks_tiff|stem||d753fc190220918c|3ac9af6bd7d39ac9|407574234||t19586.7697227939s||0|rds|local|vector|||0.04||1m22mdata must be a 34mdata.frame39m, or an object coercible by fortify,not a check_modelsee_check_model object.
 model_adj_plot|stem|e0e151b04e2fe300|810fee610cdb9171|22f8d37ed39ad94e|-1587339582||t19586.6363400961s|65fbd605ba915909|641771|rds|local|vector|||0.19|1m22mUsing size aesthetic for lines was deprecated in ggplot2 3.4.0.36mℹ39m Please use linewidth instead.|
 model_adj_plot_tiff|stem|18982f45356dccfb|8123560932bd0f56|49c1a55d463fc432|1979824976||t19586.6363525055s|abbdb7fe746336f0|76|rds|local|vector|||0.17|1m22mRemoved 2577 rows containing missing values geom_point.|
-model_checks|stem|aaf1611a0e456527|31712795c4b8fa89|f28bf776422524c1|1541750321||t19586.566188903s|7bd81db882f1dbda|71919|rds|local|vector|||0.41||
+model_checks|stem|0f193cfa8052415b|4827ae1560dc01b7|45db07815bf088e5|1541750321||t19586.7828327326s|abbdb7fe746336f0|76|rds|local|vector|||2.83||
 model_comparison_2logBF|stem|66334c2e7801c9bd|2eed10b32430a64a|033ce3a1e449ade3|-680132800||t19586.7563644295s|dcfb5579c9d2f932|290|rds|local|vector|||0.07||
 model_plot|stem|c909a3e65cf7ef48|69b60769231772c5|98f9dd79d2da74e8|-1874877671||t19586.6283020757s|7aa6f17bcac7f4e6|530899|rds|local|vector|||0.14||
 model_plot_tiff|stem|d32e7ef67187601a|776521d4ac7d09dc|49d38256a91b04d9|-914831076||t19586.6293657641s|c6fbfb9abe15abfd|72|rds|local|vector|||0.16|1m22mRemoved 2577 rows containing missing values geom_point.|
 normalise|function|c22ce35671935e98|||||||||||||||
+original_model_checks|stem|e62af9c5fd834f0d|b62d3998c1e89c64|9b20446b8969b458|1541113920|original_model_checks.pdf*original_model_checks.qmd|t19586.7697214264s|8e9d7e040099ee97|103818|file|local|vector|||11.71||
 plot_individual_adj_preds|function|6ce03c015ef97034|||||||||||||||
 plot_individual_data|function|2c9bd5dc80e36eb0|||||||||||||||
 plot_individual_preds|function|10399880c425338e|||||||||||||||
 plot_model|function|bc1efbe60cbcd0bf|||||||||||||||
 plot_model_adj|function|afe670acee176fbe|||||||||||||||
 read_prepare_data|function|5cfd01bd00ef9027|||||||||||||||
-report|stem|a7c31f44aab52b37|fb1e154a2ed927d8|5af83677dd8153c3|-237041703|report.docx*report.qmd|t19586.7630907165s|1183950e169267b8|19472|file|local|vector|||6.22||
+report|stem|a7c31f44aab52b37|fb1e154a2ed927d8|5af83677dd8153c3|-237041703|report.docx*report.qmd|t19586.7630907165s||19472|file|local|vector|||6.4||33m39m System command quarto.exe failed

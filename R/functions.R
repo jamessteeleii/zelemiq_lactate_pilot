@@ -57,8 +57,13 @@ fit_model <- function(data) {
                 REML = TRUE)
 }
 
-make_model_checks <- function(model) {
-  check_model(model)
+make_model_checks_tiff <- function(model) {
+  checks <- check_model(model)
+
+  plot(checks)
+
+  ggsave("plots/model_checks.tiff", width = 10, height = 10, device = "tiff", dpi = 300)
+
 }
 
 plot_model <- function(data, model) {
@@ -141,8 +146,13 @@ fit_model_adj <- function(data_adj) {
                 REML = TRUE)
 }
 
-make_model_adj_checks <- function(model_adj) {
-  check_model(model_adj)
+make_model_adj_checks_tiff <- function(model_adj) {
+  checks_adj <- check_model(model_adj)
+
+  plot(checks_adj)
+
+  ggsave("plots/model_adj_checks.tiff", width = 10, height = 10, device = "tiff", dpi = 300)
+
 }
 
 plot_model_adj <- function(data_adj, model_adj) {
