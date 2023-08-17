@@ -1,0 +1,67 @@
+---
+title: "Statistical Analysis and Results"
+format: docx
+docx:
+    toc: false
+    number-sections: true
+    highlight-style: github
+    prefer-html: true
+bibliography: references.bib
+csl: apa.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align="center")
+options(knitr.kable.NA = '')
+
+library(tidyverse)
+library(kableExtra)
+library(patchwork)
+
+```
+
+# Statistical Analysis
+
+The present analysis was not pre-registered as we had no a priori hypotheses and thus, given the pilot nature of this study, was considered exploratory. Inferential statistics were treated as highly unstable local descriptions of the relations between model assumptions and data in order to acknowledge the inherent uncertainty in drawing generalised inferences from single and small samples [@amrhein_inferential_2019]. For all analyses we opted to avoid dichotomising the existence of effects and therefore did not employ traditional null hypothesis significance testing on parameter estimates [@amrhein_scientists_2019; @mcshane_abandon_2019]. Instead, we opted to take an estimation-based approach instead [@cumming_new_2014]. For all analyses model parameter estimates and their precision, along with conclusions based upon them, were interpreted continuously and probabilistically, considering data quality, plausibility of effect, and previous literature, all within the context of each model. We focused primarily on qualitative examination of our results based on visualization of the data and models for fixed effects, and exploration of variances using random effects and visualising individual participant level model predictions.
+
+All analysis was performed in R (version 4.2.2, The R Foundation for Statistical Computing, 2022) and all data and code is presented in the supplementary materials (https://osf.io/kf9r3/). The aim of our analysis was to explore how well the Zelemiq sensor device predicted blood lactate levels as measured from capillary samples by the Biosen C-Line.  The dependent variable in our model was therefore the blood lactate levels, and the independent predictor variable was the Zelemiq sensor data. A rolling mean was calculated for the Zelemiq data using a 10 sample window prior to the corresponding blood lactate values at that time point. A mixed effect model was estimated [@bates_lme4_2023] using Restricted Maximal Likelihood with the Zelemiq sensor data as a fixed effect, and allowing random intercepts and slopes by participant id. The model equation was as follows:
+
+$$
+\begin{aligned}
+  \operatorname{Lactate}_{i}  &\sim N \left(\alpha_{j[i]} + \beta_{1j[i]}(\operatorname{Zelemiq}), \sigma^2 \right) \\    
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &\alpha_{j} \\
+      &\beta_{1j}
+    \end{aligned}
+  \end{array}
+\right)
+  &\sim N \left(
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &\mu_{\alpha_{j}} \\
+      &\mu_{\beta_{1j}}
+    \end{aligned}
+  \end{array}
+\right)
+, 
+\left(
+  \begin{array}{cc}
+     \sigma^2_{\alpha_{j}} & \rho_{\alpha_{j}\beta_{1j}} \\ 
+     \rho_{\beta_{1j}\alpha_{j}} & \sigma^2_{\beta_{1j}}
+  \end{array}
+\right)
+ \right)
+    \text{, for id j = 1,} \dots \text{,J}
+\end{aligned}
+$$
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+
+targets::tar_load(model_comparison_2logBF)
+
+```
+
+We initially fit the model based on the unadjusted averaged Zelemiq sensor data. However, it was clear from this initial model that the model was a poor fit to the data (see posterior predictive check here: ????) likely resulting from the considerable variance in the intercepts between participants due to very different baseline Zelemiq sensor values (see model and individual predictions here: ????). As such, we re-centered within each individual participant based upon their baseline average Zelemiq sensor value (i.e., within each participant $Zelemiq_z-Zelemiq_1\text{, for Zelemiq z = 1,} \dots \text{,Z}$). Comparison of the re-centred model with the original model based on Bayes factors calculated with approximate Bayesian Information Criterion [@wagenmakers_practical_2007] suggested there was very strong evidence supporting the re-centred model ($2×logBF =$ `r 2*round(model_comparison_2logBF$log_BF, 1)[2]`; @kass_bayes_1995). Thus we proceeded with this model. The assumption checks for the re-centered model can be seen in the supplementary materials (see ????). We examined the marginal and conditional $R^2$. Model predictions were visualised for both the conditional fixed effect, and at the individual participant level using the `marginaleffects` package [@arel-bundock_marginaleffects_2022]. We also examined the random effects standard deviations with profile confidence intervals. The raw Zelemiq sensor data (i.e., unaveraged) was also visualised alongside the blood lactate data. All data visualisations were made using `ggplot2` [@wickham_ggplot2_2022], the `tidybayes` package [@kay_tidybayes_2022], and the `patchwork` package [@pedersen_patchwork_2022].
+

@@ -1,11 +1,43 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+.Random.seed|object|f78a1d22c8b87514|||||||||||||||
+add_adj_data|function|1a9ea3e9e4fa9dcc|||||||||||||||
+combine_adj_plots|function|f98841619adbdfdc|||||||||||||||
+combine_plots|function|7f9b3eda8c87ab6c|||||||||||||||
+compare_models|function|5e22c3c9fbff14a4|||||||||||||||
 data|stem|6d4913c0484f4bcf|9ca0a6f10b807a74|97d83019d6ebc66d|1588979285||t19586.5204829733s|5b24ceab1f1cf884|53283|rds|local|vector|||0.31||
+data_adj|stem|a5052e6cfae18f45|23beab3cd6923103|e43499aa3a0117ca|-1680117502||t19586.6282933496s|fc8ae9fa1a13d64c|72742|rds|local|vector|||0||
 file|stem|d91ddb81f5ed0ae8|59b855ce18248d27|4e3739ef91745af0|-1301001980|C:/Users/james/Dropbox/Research/Zelemiq/zelemiq_lactate_pilot/data/Zelemiq Data analysis - JW - all data.xlsx|t19559.394876493s|9ea0405689f4d315|289570|file|local|vector|||1.73|package tibble was built under R version 4.2.3. package tidyr was built under R version 4.2.3. package readr was built under R version 4.2.3. package stringr was built under R version 4.2.3. package forcats was built under R version 4.2.3. package lubridate was built under R version 4.2.3. package scales was built under R version 4.2.3|
 fit_model|function|91d1370f003b53ca|||||||||||||||
+fit_model_adj|function|dd47c8514c26ce0c|||||||||||||||
+individual_adj_preds_plot|stem|3c5cdc958cd190b2|455b0450e57db3bf|5d6e89948f53d5ed|890462364||t19586.6346344311s|f1a6fb39cacbd7eb|673051|rds|local|vector|||0.38|1m22mUsing size aesthetic for lines was deprecated in ggplot2 3.4.0.36mℹ39m Please use linewidth instead.|
+individual_adj_preds_plot_tiff|stem|654499ab3da55c19|485f901a337ab269|06c3711e23185441|-837570910||t19586.6346485738s|e7d9c43b1c994be3|87|rds|local|vector|||0.58|1m22mRemoved 2577 rows containing missing values geom_point.|
 individual_data_plot|stem|053f9a2566d81319|7e751a7158f305f2|8db44645b11f9264|2061594810||t19586.5204845372s|79de67ebbf47da67|255552|rds|local|vector|||0.05||
 individual_data_plot_tiff|stem|5f7a4b5bde86715d|ca3b37eaf75315a1|998a25608696005f|-1448408397||t19586.5204980454s|0b52c5847220add9|82|rds|local|vector|||1.06|1m22mRemoved 2577 rows containing nonfinite values stat_smooth.. span too small.   fewer data values than degrees of freedom.. pseudoinverse used at 0.04525. neighborhood radius 0.46975. reciprocal condition number  0. There are other near singularities as well. 0.23986. Chernobyl trLn 5. Chernobyl trLn 5. NaNs produced. span too small.   fewer data values than degrees of freedom.. pseudoinverse used at 0.04525. neighborhood radius 0.50475. reciprocal condition number  0. There are other near singularities as well. 0.2068. 1m22mRemoved 2577 rows containing missing values geom_point.|
+individual_preds_plot|stem|d0544bef743380c4|bb5b05f3d1c25141|fca2f39ee4c6706f|-1133605317||t19586.6282993178s|5e5e9aa43866745c|570304|rds|local|vector|||0.39|1m22mUsing size aesthetic for lines was deprecated in ggplot2 3.4.0.36mℹ39m Please use linewidth instead.|
+individual_preds_plot_tiff|stem|39366866e7e86781|5aaad2d5774d3882|9211e0b37f228445|-1603714794||t19586.6293463099s|40b3a10246f0095b|83|rds|local|vector|||0.76|1m22mRemoved 2577 rows containing missing values geom_point.|
+main_adj_plot|stem|06b765d6474234a8|7336817b1158d834|b7b7cb68ecff728b|-793222920||t19586.7563957481s|ff026697d66e9a9f|75|rds|local|vector|||2.61|1m22mRemoved 2577 rows containing nonfinite values stat_smooth.. span too small.   fewer data values than degrees of freedom.. pseudoinverse used at 0.04525. neighborhood radius 0.46975. reciprocal condition number  0. There are other near singularities as well. 0.23986. Chernobyl trLn 5. Chernobyl trLn 5. NaNs produced. span too small.   fewer data values than degrees of freedom.. pseudoinverse used at 0.04525. neighborhood radius 0.50475. reciprocal condition number  0. There are other near singularities as well. 0.2068. 1m22mRemoved 2577 rows containing missing values geom_point.. 1m22mRemoved 2577 rows containing missing values geom_point.. 1m22mRemoved 2577 rows containing missing values geom_point.|
+main_plot|stem|7f1f569ac8475da5|3d99ec1437990e34|20f40e15a6c1d638|83197409||t19586.6293638361s|79365c26e374407f|71|rds|local|vector|||1.46|1m22mRemoved 2577 rows containing nonfinite values stat_smooth.. span too small.   fewer data values than degrees of freedom.. pseudoinverse used at 0.04525. neighborhood radius 0.46975. reciprocal condition number  0. There are other near singularities as well. 0.23986. Chernobyl trLn 5. Chernobyl trLn 5. NaNs produced. span too small.   fewer data values than degrees of freedom.. pseudoinverse used at 0.04525. neighborhood radius 0.50475. reciprocal condition number  0. There are other near singularities as well. 0.2068. 1m22mRemoved 2577 rows containing missing values geom_point.. 1m22mRemoved 2577 rows containing missing values geom_point.. 1m22mRemoved 2577 rows containing missing values geom_point.|
+make_individual_adj_preds_plot_tiff|function|3407d820307b7213|||||||||||||||
 make_individual_data_plot_tiff|function|7e08187c3ac760b9|||||||||||||||
+make_individual_preds_plot_tiff|function|2b96452d6ed8969e|||||||||||||||
+make_model_adj_checks|function|66520631a37db24f|||||||||||||||
+make_model_adj_plot_tiff|function|e998967b65627212|||||||||||||||
+make_model_checks|function|fad92cbb84876cdf|||||||||||||||
+make_model_plot_tiff|function|1faec564cd3a51cf|||||||||||||||
 model|stem|6b334bc3b23a5e19|f3249b4ecf290e96|6beacca627a06724|1816327236||t19586.5204856957s|2864f67b01e0b2a7|187513|rds|local|vector|||0.04||
+model_adj|stem|fcb74284e2fa8f88|2eaa8f98f4b2afce|77f74f42ce86d449|1279204218||t19586.6293368402s|47f2ec56e18183f6|205473|rds|local|vector|||0.04||
+model_adj_checks|stem|d9e1431bed16f63e|31c7fc3dd16f92a7|f4d83f714fe7c5b6|1873723817||t19586.6346391694s|ced4a115ebcd226c|71712|rds|local|vector|||0.38||
+model_adj_plot|stem|e0e151b04e2fe300|810fee610cdb9171|22f8d37ed39ad94e|-1587339582||t19586.6363400961s|65fbd605ba915909|641771|rds|local|vector|||0.19|1m22mUsing size aesthetic for lines was deprecated in ggplot2 3.4.0.36mℹ39m Please use linewidth instead.|
+model_adj_plot_tiff|stem|18982f45356dccfb|8123560932bd0f56|49c1a55d463fc432|1979824976||t19586.6363525055s|abbdb7fe746336f0|76|rds|local|vector|||0.17|1m22mRemoved 2577 rows containing missing values geom_point.|
+model_checks|stem|aaf1611a0e456527|31712795c4b8fa89|f28bf776422524c1|1541750321||t19586.566188903s|7bd81db882f1dbda|71919|rds|local|vector|||0.41||
+model_comparison_2logBF|stem|66334c2e7801c9bd|2eed10b32430a64a|033ce3a1e449ade3|-680132800||t19586.7563644295s|dcfb5579c9d2f932|290|rds|local|vector|||0.07||
+model_plot|stem|c909a3e65cf7ef48|69b60769231772c5|98f9dd79d2da74e8|-1874877671||t19586.6283020757s|7aa6f17bcac7f4e6|530899|rds|local|vector|||0.14||
+model_plot_tiff|stem|d32e7ef67187601a|776521d4ac7d09dc|49d38256a91b04d9|-914831076||t19586.6293657641s|c6fbfb9abe15abfd|72|rds|local|vector|||0.16|1m22mRemoved 2577 rows containing missing values geom_point.|
 normalise|function|c22ce35671935e98|||||||||||||||
+plot_individual_adj_preds|function|6ce03c015ef97034|||||||||||||||
 plot_individual_data|function|2c9bd5dc80e36eb0|||||||||||||||
+plot_individual_preds|function|10399880c425338e|||||||||||||||
+plot_model|function|bc1efbe60cbcd0bf|||||||||||||||
+plot_model_adj|function|afe670acee176fbe|||||||||||||||
 read_prepare_data|function|5cfd01bd00ef9027|||||||||||||||
+report|stem|a7c31f44aab52b37|fb1e154a2ed927d8|5af83677dd8153c3|-237041703|report.docx*report.qmd|t19586.7630907165s|1183950e169267b8|19472|file|local|vector|||6.22||
