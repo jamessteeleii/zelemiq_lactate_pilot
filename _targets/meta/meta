@@ -1,0 +1,11 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+data|stem|6d4913c0484f4bcf|9ca0a6f10b807a74|97d83019d6ebc66d|1588979285||t19586.5204829733s|5b24ceab1f1cf884|53283|rds|local|vector|||0.31||
+file|stem|d91ddb81f5ed0ae8|59b855ce18248d27|4e3739ef91745af0|-1301001980|C:/Users/james/Dropbox/Research/Zelemiq/zelemiq_lactate_pilot/data/Zelemiq Data analysis - JW - all data.xlsx|t19559.394876493s|9ea0405689f4d315|289570|file|local|vector|||1.73|package tibble was built under R version 4.2.3. package tidyr was built under R version 4.2.3. package readr was built under R version 4.2.3. package stringr was built under R version 4.2.3. package forcats was built under R version 4.2.3. package lubridate was built under R version 4.2.3. package scales was built under R version 4.2.3|
+fit_model|function|91d1370f003b53ca|||||||||||||||
+individual_data_plot|stem|053f9a2566d81319|7e751a7158f305f2|8db44645b11f9264|2061594810||t19586.5204845372s|79de67ebbf47da67|255552|rds|local|vector|||0.05||
+individual_data_plot_tiff|stem|5f7a4b5bde86715d|ca3b37eaf75315a1|998a25608696005f|-1448408397||t19586.5204980454s|0b52c5847220add9|82|rds|local|vector|||1.06|1m22mRemoved 2577 rows containing nonfinite values stat_smooth.. span too small.   fewer data values than degrees of freedom.. pseudoinverse used at 0.04525. neighborhood radius 0.46975. reciprocal condition number  0. There are other near singularities as well. 0.23986. Chernobyl trLn 5. Chernobyl trLn 5. NaNs produced. span too small.   fewer data values than degrees of freedom.. pseudoinverse used at 0.04525. neighborhood radius 0.50475. reciprocal condition number  0. There are other near singularities as well. 0.2068. 1m22mRemoved 2577 rows containing missing values geom_point.|
+make_individual_data_plot_tiff|function|7e08187c3ac760b9|||||||||||||||
+model|stem|6b334bc3b23a5e19|f3249b4ecf290e96|6beacca627a06724|1816327236||t19586.5204856957s|2864f67b01e0b2a7|187513|rds|local|vector|||0.04||
+normalise|function|c22ce35671935e98|||||||||||||||
+plot_individual_data|function|2c9bd5dc80e36eb0|||||||||||||||
+read_prepare_data|function|5cfd01bd00ef9027|||||||||||||||
