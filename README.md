@@ -21,3 +21,7 @@ Useful console functions:
 - `tar_edit()` opens a the make file
 - `tar_make()` to run targets
 - `tar_visnetwork()` to view pipeline
+
+The current targets in the pipeline are:
+
+![alt text](network.png "Pipeline Targets Visnetwork")
