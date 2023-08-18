@@ -60,7 +60,7 @@ ggplot(data, aes(x=time_norm, y=lactate)) +
   geom_smooth(aes(y = a + zelemiq_raw*b), color = "#56B4E9", se=FALSE) + # zelemiq
   geom_point(color = "#D55E00", alpha = 0.5) + # lactate
   geom_smooth(se=FALSE, color = "#D55E00") + # lactate
-  scale_y_continuous(bquote("Blood Lactate (mmol."~L^-1~")"), sec.axis = sec_axis(~ (. - a)/b, name = "Zelemiq Ltd Output (raw)")) +
+  scale_y_continuous(bquote("Blood Lactate (mmol\U00B7"~L^-1~")"), sec.axis = sec_axis(~ (. - a)/b, name = "Zelemiq Ltd Output (raw)")) +
   scale_x_continuous("Time (normalised percentage)", labels = percent) +
   facet_wrap("id", nrow = 2) +
   labs(title = "<span style = 'color: #56B4E9;'>Zelemiq Ltd Ouput</span> and <span style = 'color: #D55E00;'>Blood Lactate from Biosen C-Line</span> during the incremental test",
@@ -242,8 +242,13 @@ renv::install("broom.mixed")
 
 tidy_model <- broom.mixed::tidy(model_adj, conf.int=TRUE, conf.method="profile")
 
-performance::r2_nakagawa(model_adj)
+R2_adj <- performance::r2_nakagawa(model_adj)
+
+R2_adj$R2_marginal
 
 tidy_model_adj <- tidy_model[c(1,2,3,5,4,6),c(1,3,4,7,8)]
 
+ICC_adj <- performance::icc(model_adj)
 
+
+ICC_adj[1]
