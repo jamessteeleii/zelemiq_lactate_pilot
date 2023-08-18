@@ -1,7 +1,7 @@
 ---
 title: "Statistical Analysis and Results"
-format: docx
-docx:
+format: 
+  docx:
     toc: false
     number-sections: true
     highlight-style: github
@@ -10,12 +10,19 @@ bibliography: references.bib
 csl: apa.csl
 ---
 
-```{r setup, include=FALSE}
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+#| include: false
+
+
 knitr::opts_chunk$set(echo = TRUE, fig.align="center")
 options(knitr.kable.NA = '')
 
 library(tidyverse)
 library(kableExtra)
+library(ggtext)
 library(patchwork)
 
 ```
@@ -24,7 +31,7 @@ library(patchwork)
 
 The present analysis was not pre-registered as we had no a priori hypotheses and thus, given the pilot nature of this study, was considered exploratory. Inferential statistics were treated as highly unstable local descriptions of the relations between model assumptions and data in order to acknowledge the inherent uncertainty in drawing generalised inferences from single and small samples [@amrhein_inferential_2019]. For all analyses we opted to avoid dichotomising the existence of effects and therefore did not employ traditional null hypothesis significance testing on parameter estimates [@amrhein_scientists_2019; @mcshane_abandon_2019]. Instead, we opted to take an estimation-based approach instead [@cumming_new_2014]. For all analyses model parameter estimates and their precision, along with conclusions based upon them, were interpreted continuously and probabilistically, considering data quality, plausibility of effect, and previous literature, all within the context of each model. We focused primarily on qualitative examination of our results based on visualization of the data and models for fixed effects, and exploration of variances using random effects and visualising individual participant level model predictions.
 
-All analysis was performed in R (version 4.2.2, The R Foundation for Statistical Computing, 2022) and all data and code is presented in the supplementary materials (https://osf.io/kf9r3/). The aim of our analysis was to explore how well the Zelemiq sensor device predicted blood lactate levels as measured from capillary samples by the Biosen C-Line.  The dependent variable in our model was therefore the blood lactate levels, and the independent predictor variable was the Zelemiq sensor data. A rolling mean was calculated for the Zelemiq data using a 10 sample window prior to the corresponding blood lactate values at that time point. A mixed effect model was estimated [@bates_lme4_2023] using Restricted Maximal Likelihood with the Zelemiq sensor data as a fixed effect, and allowing random intercepts and slopes by participant id. The model equation was as follows:
+All analysis was performed in R (version 4.2.2, The R Foundation for Statistical Computing, 2022) and all data and code is presented in the supplementary materials (https://osf.io/kf9r3/). The aim of our analysis was to explore how well the Zelemiq sensor device predicted blood lactate levels as measured from capillary samples by the Biosen C-Line. The dependent variable in our model was therefore the blood lactate levels, and the independent predictor variable was the Zelemiq sensor data. A rolling mean was calculated for the Zelemiq data using a 10 sample window prior to the corresponding blood lactate values at that time point. A linear mixed effect model was estimated [@bates_lme4_2023] using Restricted Maximal Likelihood with the Zelemiq sensor data as a fixed effect, and allowing random intercepts and slopes by participant id. The model equation was as follows:
 
 $$
 \begin{aligned}
@@ -57,11 +64,103 @@ $$
     \text{, for id j = 1,} \dots \text{,J}
 \end{aligned}
 $$
-```{r message=FALSE, warning=FALSE, echo=FALSE}
+
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
 
 targets::tar_load(model_comparison_2logBF)
 
 ```
 
-We initially fit the model based on the unadjusted averaged Zelemiq sensor data. However, it was clear from this initial model that the model was a poor fit to the data (see posterior predictive check here: ????) likely resulting from the considerable variance in the intercepts between participants due to very different baseline Zelemiq sensor values (see model and individual predictions here: ????). As such, we re-centered within each individual participant based upon their baseline average Zelemiq sensor value (i.e., within each participant $Zelemiq_z-Zelemiq_1\text{, for Zelemiq z = 1,} \dots \text{,Z}$). Comparison of the re-centred model with the original model based on Bayes factors calculated with approximate Bayesian Information Criterion [@wagenmakers_practical_2007] suggested there was very strong evidence supporting the re-centred model ($2×logBF =$ `r 2*round(model_comparison_2logBF$log_BF, 1)[2]`; @kass_bayes_1995). Thus we proceeded with this model. The assumption checks for the re-centered model can be seen in the supplementary materials (see ????). We examined the marginal and conditional $R^2$. Model predictions were visualised for both the conditional fixed effect, and at the individual participant level using the `marginaleffects` package [@arel-bundock_marginaleffects_2022]. We also examined the random effects standard deviations with profile confidence intervals. The raw Zelemiq sensor data (i.e., unaveraged) was also visualised alongside the blood lactate data. All data visualisations were made using `ggplot2` [@wickham_ggplot2_2022], the `tidybayes` package [@kay_tidybayes_2022], and the `patchwork` package [@pedersen_patchwork_2022].
+We initially fit the model based on the unadjusted averaged Zelemiq sensor data. However, it was clear from this initial model that the model was a poor fit to the data (see posterior predictive check here: https://osf.io/98ey6) likely resulting from the considerable variance in the intercepts between participants due to very different baseline Zelemiq sensor values (see model and individual predictions here: https://osf.io/j26ea). As such, we re-centered within each individual participant based upon their baseline average Zelemiq sensor value (i.e., within each participant $Zelemiq_z-Zelemiq_1\text{, for Zelemiq z = 1,} \dots \text{,Z}$). Comparison of the re-centred model with the original model based on Bayes factors calculated with approximate Bayesian Information Criterion [@wagenmakers_practical_2007] suggested there was very strong evidence supporting the re-centred model ($2×logBF =$ `r 2*round(model_comparison_2logBF$log_BF, 1)[2]`; @kass_bayes_1995). Thus we proceeded with this model. The assumption checks for the re-centered model can be seen in the supplementary materials (see https://osf.io/kbzsa). Slope parameters for the Zelemiq, both fixed and random, are divided by 100 to aid interpretability such that they refer to the change in blood lactate for a 0.01 unit change in the Zelemiq sensor value. Profile confidence intervals (CI) were calculated for all model parameters at the 95% level. We examined adjusted and unadjusted intraclass correlation coefficient (ICC) and the marginal and conditional $R^2$ [@nakagawa_coefficient_2017]. Model predictions were visualised for both the conditional fixed effect, and at the individual participant level using the `marginaleffects` package [@arel-bundock_marginaleffects_2022]. The raw Zelemiq sensor data (i.e., unaveraged) was also visualised alongside the blood lactate data. All data visualisations were made using `ggplot2` [@wickham_ggplot2_2022], the `tidybayes` package [@kay_tidybayes_2022], and the `patchwork` package [@pedersen_patchwork_2022].
 
+# Results
+
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+
+targets::tar_load(tidy_model_adj)
+
+slopes <- tidy_model_adj[c(2,5),c(3,4,7,8)] %>%
+  mutate_if(is.numeric, ~./100)
+
+rest <- tidy_model_adj[c(1,3,4,6),c(3,4,7,8)]
+
+tidy_model_adj <- rbind(slopes, rest)
+
+tidy_model_adj <- tidy_model_adj[c(3,1,4,2,5,6),] %>%
+    mutate_if(is.numeric, round, 2)
+
+tidy_model_adj$term <- recode(tidy_model_adj$term,
+                        "(Intercept)" = "Intercept",
+                        "zelemiq_avg_adj" = "Zelemiq",
+                        "sd__(Intercept)" = "$\\sigma_{Intercept}$",  
+                        "sd__zelemiq_avg_adj" = "$\\sigma_{Zelemiq}$",
+                        "cor__(Intercept).zelemiq_avg_adj" = "$\\rho_{Intercept:Zelemiq}$",
+                        "sd__Observation" = "$\\sigma_{Residual}$")
+
+```
+
+Model parameters estimates and confidence intervals are shown in @tbl-model and @fig-model shows the raw data and model predictions for each individual participant in addition to the conditional model predictions. The fixed effect for the intercept corresponded to a blood lactate value of `r tidy_model_adj$estimate[1]`[95%CI `r tidy_model_adj$conf.low[1]` to `r tidy_model_adj$conf.high[1]`] $\text{mmol}\cdot L^{-1}$ and the fixed effect for the slope suggested that blood lactate increased by `r tidy_model_adj$estimate[2]`[95%CI `r tidy_model_adj$conf.low[2]` to `r tidy_model_adj$conf.high[2]`] $\text{mmol}\cdot L^{-1}$ per 0.01 unit increase in the Zelemiq sensor value (see @fig-model (C)). 
+
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+#| label: tbl-model 
+#| tbl-cap-location: "top"
+#| tbl-cap: Model parameter estimates for both fixed and random effects.
+
+
+knitr::kable(
+  tidy_model_adj,
+  align = c("l","c","c","c"),
+  col.names = c("Model Term",
+                "Estimate",
+                "Lower 95% CI",
+                "Upper 95% CI"
+                )
+) %>%
+  footnote(general = c("CI = confidence interval","Slopes for Zelemiq divided by 100 to aid interpretation such that they refer to the change in blood lactate for a 0.01 unit change in the Zelemiq sensor value")
+           ) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_classic(full_width = FALSE) %>%
+  pack_rows("Fixed Effects", 1,2) %>%
+  pack_rows("Random Effects", 3,6) %>%
+  kableExtra::kable_styling()
+
+```
+
+```{r}
+#| message: false
+#| warning: false
+#| echo: false
+#| label: fig-model 
+#| fig-width: 20
+#| fig-height: 10
+#| fig-cap: Panel (A) shows the raw Zelemiq sensor output and Biosen C-Line blood lactate during the course of the incremental test where time has been normalised to 0-100% of the test duration with a locally estimated scatter smooth (LOESS) curve for each, panel (B) shows the individual participant level predicted values (thick lines) with 95% confidence intervals (ribbons) from the fitted model, and panel (C) shows the conditional model predicted values (thick lines) with 95% confidence intervals (ribbons). Individual points in each panel are the individual observed values of data.
+
+targets::tar_load(individual_data_plot)
+targets::tar_load(individual_adj_preds_plot)
+targets::tar_load(model_adj_plot)
+
+((individual_data_plot / individual_adj_preds_plot) | model_adj_plot) +
+    plot_annotation(tag_level = "A",
+                    tag_prefix = "(", tag_suffix = ")")
+```
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+
+targets::tar_load(model_adj)
+
+```
+
+Considering the random effects there was not substantial variance in the individual participant intercept values with a $\sigma_{Intercept}$ = `r tidy_model_adj$estimate[3]`[95%CI `r tidy_model_adj$conf.low[3]` to `r tidy_model_adj$conf.high[3]`] $\text{mmol}\cdot L^{-1}$ reflecting typical variance in resting blood lactate. However, there was more conspicuous variance in the slopes across individual participants with a $\sigma_{Zelemiq}$ = `r tidy_model_adj$estimate[4]`[95%CI `r tidy_model_adj$conf.low[4]` to `r tidy_model_adj$conf.high[4]`] $\text{mmol}\cdot L^{-1}$. The variation in slopes can be seen clearly in @fig-model (B). The correlation between random intercepts and slopes was positive, though the estimate was imprecise ($\rho_{Intercept:Zelemiq}$ = `r tidy_model_adj$estimate[5]`[95%CI `r tidy_model_adj$conf.low[5]` to `r tidy_model_adj$conf.high[5]`]) Both the adjusted compared with the unadjusted ICC (adjusted = `r round(performance::icc(model_adj)$ICC_adjusted,2)`, unadjusted = `r round(performance::icc(model_adj)$ICC_unadjusted,2)`), and the marginal compared with the condition $R^2$ (marginal = `r round(performance::r2_nakagawa(model_adj)$R2_marginal,2)`, conditional = `r round(performance::r2_nakagawa(model_adj)$R2_conditional,2)`) suggested that the majority of variance in the model was attributable to the individual participant level. 
+
+# References

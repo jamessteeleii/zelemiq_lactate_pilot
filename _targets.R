@@ -3,8 +3,8 @@ library(targets)
 library(tarchetypes)
 source("R/functions.R")
 tar_option_set(packages = c("here", "readxl", "janitor", "tidyverse", "base", "scales", "ggtext", "zoo",
-                            "performance", "lme4", "marginaleffects", "patchwork", "kableExtra", "bayestestR",
-                            "quarto"))
+                            "performance", "see", "lme4", "marginaleffects", "broom.mixed",
+                            "patchwork", "kableExtra", "knitr", "bayestestR", "quarto", "officer", "officedown"))
 
 list(
   # Load in data
@@ -15,7 +15,7 @@ list(
   tar_target(model, fit_model(data)),
 
   # Model checks
-  tar_target(model_checks, make_model_checks(model)),
+  tar_target(model_checks, make_model_checks_tiff(model)),
 
   # Make and save plots
   tar_target(individual_data_plot, plot_individual_data(data)),
@@ -34,9 +34,10 @@ list(
 
   # Fit new model adjusting for each participants baseline
   tar_target(model_adj, fit_model_adj(data_adj)),
+  tar_target(tidy_model_adj, get_tidy_model(model_adj)),
 
   # Model checks
-  tar_target(model_adj_checks, make_model_adj_checks(model_adj)),
+  tar_target(model_adj_checks, make_model_adj_checks_tiff(model_adj)),
 
   # Make and save plots
 
@@ -53,5 +54,6 @@ list(
 
   # Render the report
   tar_quarto(report, "report.qmd")
+
 
 )

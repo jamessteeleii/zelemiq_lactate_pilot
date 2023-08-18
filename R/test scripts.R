@@ -212,11 +212,14 @@ renv::install("texPreview")
 
 targets::tar_load(model_checks)
 
+renv::install("see")
+
 
 
 p.sd_1001 <- profile(model,which="theta_",
                      signames=FALSE)
 ran_cor <- as.data.frame(confint(p.sd_1001))
+
 
 p.sd_3001 <- profile(LMM_3001,which="theta_",
                      signames=FALSE)
@@ -229,3 +232,18 @@ confint(p.sd_5001)
 confint(model_adj)
 
 renv::install("quarto")
+
+checks <- performance::check_model(model)
+
+plot(checks)
+
+
+renv::install("broom.mixed")
+
+tidy_model <- broom.mixed::tidy(model_adj, conf.int=TRUE, conf.method="profile")
+
+performance::r2_nakagawa(model_adj)
+
+tidy_model_adj <- tidy_model[c(1,2,3,5,4,6),c(1,3,4,7,8)]
+
+

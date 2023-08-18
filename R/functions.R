@@ -31,11 +31,12 @@ plot_individual_data <- function(data) {
   a <- ylim.prim[1] - b*ylim.sec[1]
 
   ggplot(data, aes(x=time_norm, y=lactate)) +
+    geom_hline(yintercept = 0, linetype = "dashed") +
     geom_point(aes(y = a + zelemiq_raw*b), color = "#56B4E9",  alpha = 0.1) + # zelemiq
     geom_smooth(aes(y = a + zelemiq_raw*b), color = "#56B4E9", se=FALSE) + # zelemiq
     geom_point(color = "#D55E00", alpha = 0.5) + # lactate
     geom_smooth(se=FALSE, color = "#D55E00") + # lactate
-    scale_y_continuous(bquote("Blood Lactate (mmol."~L^-1~")"), sec.axis = sec_axis(~ (. - a)/b, name = "Zelemiq Ltd Output (raw)")) +
+    scale_y_continuous(bquote("Blood Lactate (mmol\U00B7"~L^-1~")"), sec.axis = sec_axis(~ (. - a)/b, name = "Zelemiq Ltd Output (raw)")) +
     scale_x_continuous("Time (normalised percentage)", labels = percent) +
     facet_wrap("id", nrow = 2) +
     labs(title = "<span style = 'color: #56B4E9;'>Zelemiq Ltd Ouput</span> and <span style = 'color: #D55E00;'>Blood Lactate from Biosen C-Line</span> during the incremental test",
@@ -80,7 +81,7 @@ plot_model <- function(data, model) {
     geom_line(size=1) +
     geom_point(data=data, aes(y=lactate), alpha=0.25) +
     labs(x = "Zelemiq Ltd Output (10 sample moving average)",
-         y = bquote("Blood Lactate (mmol."~L^-1~")"),
+         y = bquote("Blood Lactate (mmol\U00B7"~L^-1~")"),
          title = "Conditional model predictions") +
     theme_bw() +
     theme(panel.grid=element_blank(),
@@ -107,7 +108,7 @@ plot_individual_preds <- function(data, model) {
     geom_line(size=1) +
     geom_point(data=data, aes(y=lactate), alpha=0.25) +
     labs(x = "Zelemiq Ltd Output (10 sample moving average)",
-         y = bquote("Blood Lactate (mmol."~L^-1~")"),
+         y = bquote("Blood Lactate (mmol\U00B7"~L^-1~")"),
          title = "Individual participant level predictions") +
     facet_wrap("id", nrow = 2) +
     theme_bw() +
@@ -146,6 +147,10 @@ fit_model_adj <- function(data_adj) {
                 REML = TRUE)
 }
 
+get_tidy_model <- function(model_adj) {
+  tidy(model_adj, conf.int=TRUE, conf.method="profile")
+}
+
 make_model_adj_checks_tiff <- function(model_adj) {
   checks_adj <- check_model(model_adj)
 
@@ -169,7 +174,7 @@ plot_model_adj <- function(data_adj, model_adj) {
     geom_line(size=1) +
     geom_point(data=data_adj, aes(y=lactate), alpha=0.25) +
     labs(x = "Baseline Adjusted Zelemiq Ltd Output (10 sample moving average)",
-         y = bquote("Blood Lactate (mmol."~L^-1~")"),
+         y = bquote("Blood Lactate (mmol\U00B7"~L^-1~")"),
          title = "Conditional model predictions") +
     theme_bw() +
     theme(panel.grid=element_blank(),
@@ -196,7 +201,7 @@ plot_individual_adj_preds <- function(data_adj, model_adj) {
     geom_line(size=1) +
     geom_point(data=data_adj, aes(y=lactate), alpha=0.25) +
     labs(x = "Baseline Adjusted Zelemiq Ltd Output (10 sample moving average)",
-         y = bquote("Blood Lactate (mmol."~L^-1~")"),
+         y = bquote("Blood Lactate (mmol\U00B7"~L^-1~")"),
          title = "Individual participant level predictions") +
     facet_wrap("id", nrow = 2) +
     theme_bw() +
@@ -216,7 +221,7 @@ combine_adj_plots <- function(individual_data_plot, individual_adj_preds_plot, m
     plot_annotation(tag_level = "A",
                     tag_prefix = "(", tag_suffix = ")")
 
-  ggsave("plots/main_adj_plot.tiff", width = 20, height = 7.5, device = "tiff", dpi = 300)
+  ggsave("plots/main_adj_plot.tiff", width = 20, height = 10, device = "tiff", dpi = 300)
 
 }
 
