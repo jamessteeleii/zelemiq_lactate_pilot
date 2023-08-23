@@ -22,6 +22,4 @@ Useful console functions:
 - `tar_make()` to run targets
 - `tar_visnetwork()` to view pipeline
 
-The current targets in the pipeline are:
-
-![alt text](network.png "Pipeline Targets Visnetwork")
+You can view the current interactive pipeline by clicking [here](https://raw.githack.com/jamessteeleii/zelemiq_lactate_pilot/main/visnetwork.html).
