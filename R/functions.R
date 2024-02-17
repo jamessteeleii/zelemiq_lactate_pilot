@@ -148,13 +148,15 @@ make_individual_preds_plot_tiff <- function(individual_preds_plot) {
 
 }
 
-combine_plots <- function(individual_data_plot, individual_preds_plot, model_plot) {
+combine_plots <- function(individual_data_plot, individual_preds_plot, model_plot, thresholds_agree_plot) {
 
-  ((individual_data_plot / individual_preds_plot) | model_plot) +
+  (((individual_data_plot / individual_preds_plot) | model_plot) / thresholds_agree_plot) +
     plot_annotation(tag_level = "A",
-                    tag_prefix = "(", tag_suffix = ")")
+                    tag_prefix = "(", tag_suffix = ")") +
+    plot_layout(heights = c(10,4)) &
+    theme(axis.title = element_text(size = 13))
 
-  ggsave("plots/main_plot.tiff", width = 20, height = 10, device = "tiff", dpi = 300)
+  ggsave("plots/main_plot.tiff", width = 20, height = 14, device = "tiff", dpi = 300)
 
 }
 
@@ -181,8 +183,6 @@ calculate_thresholds <- function(data) {
            )) |>
     ungroup() |>
     select(id, intensity, lactate_z, zelemiq_avg_z)
-
-  library(lactater)
 
   thresholds <- data.frame(
     id = character(),
@@ -234,5 +234,108 @@ calculate_thresholds <- function(data) {
                                    zelemiq = zelemiq_thresholds$lactate)
     )
   }
+  return(thresholds)
 }
 
+calculate_thresholds_agree <- function(thresholds) {
+  thresholds_agree <- data.frame(
+    method = factor(),
+    bias = as.numeric(),
+    bias_lower = as.numeric(),
+    bias_upper = as.numeric(),
+    lower_loa = as.numeric(),
+    lower_loa_lower = as.numeric(),
+    lower_loa_upper = as.numeric(),
+    upper_loa = as.numeric(),
+    upper_loa_lower = as.numeric(),
+    upper_loa_upper = as.numeric(),
+    ccc = as.numeric(),
+    ccc_lower = as.numeric(),
+    ccc_upper = as.numeric()
+  )
+
+  method <- tibble(method = unique(thresholds$method)) |>
+    filter(str_detect(method, pattern = "Log", negate = TRUE))
+
+
+  for(i in method$method) {
+    method_data <- thresholds |>
+      filter(str_detect(method, pattern = "Log", negate = TRUE)) |>
+      filter(method == i)
+
+    agree <- SimplyAgree::agree_test(x = method_data$intensity_zelemiq,
+                                     y = method_data$intensity_lactate)
+
+    thresholds_agree <- rbind(thresholds_agree,
+                              data.frame(
+                                method = i,
+                                bias = agree$loa$estimate[1],
+                                bias_lower = agree$loa$lower.ci[1],
+                                bias_upper = agree$loa$upper.ci[1],
+                                lower_loa = agree$loa$estimate[2],
+                                lower_loa_lower = agree$loa$lower.ci[2],
+                                lower_loa_upper = agree$loa$upper.ci[2],
+                                upper_loa = agree$loa$estimate[3],
+                                upper_loa_lower = agree$loa$lower.ci[3],
+                                upper_loa_upper = agree$loa$upper.ci[3],
+                                ccc = agree$ccc.xy$est.ccc,
+                                ccc_lower = agree$ccc.xy$lower.ci,
+                                ccc_upper = agree$ccc.xy$upper.ci
+
+                              )
+    )
+  }
+  return(thresholds_agree)
+}
+
+plot_thresholds_agree <- function(thresholds, thresholds_agree) {
+  thresholds |>
+    filter(str_detect(method, pattern = "Log", negate = TRUE)) |>
+    ggplot(aes(x = intensity_lactate, y = intensity_zelemiq)) +
+    geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+    geom_point() +
+    geom_text(data = thresholds_agree,
+              aes(label = glue::glue("Bias = {round(bias,2)} [95%CI: {round(bias_lower,2)}, {round(bias_upper,2)}]")),
+              x = 140,
+              y = 250,
+              size = 2.5
+    ) +
+    geom_text(data = thresholds_agree,
+              aes(label = glue::glue("Lower LOA = {round(lower_loa,2)} [90%CI: {round(lower_loa_lower,2)}, {round(lower_loa_upper,2)}]")),
+              x = 140,
+              y = 235,
+              size = 2.5
+    ) +
+    geom_text(data = thresholds_agree,
+              aes(label = glue::glue("Upper LOA = {round(upper_loa,2)} [90%CI: {round(upper_loa_lower,2)}, {round(upper_loa_upper,2)}]")),
+              x = 140,
+              y = 220,
+              size = 2.5
+    ) +
+    geom_text(data = thresholds_agree,
+              aes(label = paste(glue::glue("rho[CCC] == {round(ccc,2)}"))),
+              x = 235,
+              y = 125,
+              size = 2.5,
+              parse = TRUE
+    ) +
+    geom_text(data = thresholds_agree,
+              aes(label = glue::glue("[95%CI: {round(ccc_lower,2)}, {round(ccc_upper,2)}]")),
+              x = 235,
+              y = 110,
+              size = 2.5
+    ) +
+    facet_grid(.~method) +
+    labs(x = "Threshold determined by blood lactate (Watts)",
+         y = "Threshold determined by Zelemiq Ltd (Watts)",
+         title = "Agreement of thresholds") +
+    theme_bw() +
+    theme(panel.grid=element_blank(),
+          plot.title = element_markdown())
+}
+
+make_thresholds_agree_plot_tiff <- function(thresholds_agree_plot) {
+
+  ggsave("plots/thresholds_agree_plot.tiff", thresholds_agree_plot, width = 20, height = 4, device = "tiff", dpi = 300)
+
+}
