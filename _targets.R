@@ -3,7 +3,7 @@ library(targets)
 library(tarchetypes)
 source("R/functions.R")
 tar_option_set(packages = c("here", "readxl", "janitor", "tidyverse", "base", "scales", "ggtext", "zoo",
-                            "performance", "see", "lme4", "marginaleffects", "broom.mixed",
+                            "performance", "see", "brms", "marginaleffects", "broom.mixed",
                             "patchwork", "kableExtra", "knitr", "bayestestR", "quarto", "officer", "officedown"))
 
 list(
@@ -27,33 +27,33 @@ list(
   tar_target(individual_preds_plot, plot_individual_preds(data, model)),
   tar_target(individual_preds_plot_tiff, make_individual_preds_plot_tiff(individual_preds_plot)),
 
-  tar_target(main_plot, combine_plots(individual_data_plot, individual_preds_plot, model_plot)),
+  tar_target(main_plot, combine_plots(individual_data_plot, individual_preds_plot, model_plot))
 
-  # Add baseline adjustment to data
-  tar_target(data_adj, add_adj_data(data)),
-
-  # Fit new model adjusting for each participants baseline
-  tar_target(model_adj, fit_model_adj(data_adj)),
-  tar_target(tidy_model_adj, get_tidy_model(model_adj)),
-
-  # Model checks
-  tar_target(model_adj_checks, make_model_adj_checks_tiff(model_adj)),
-
-  # Make and save plots
-
-  tar_target(model_adj_plot, plot_model_adj(data_adj, model_adj)),
-  tar_target(model_adj_plot_tiff, make_model_adj_plot_tiff(model_adj_plot)),
-
-  tar_target(individual_adj_preds_plot, plot_individual_adj_preds(data_adj, model_adj)),
-  tar_target(individual_adj_preds_plot_tiff, make_individual_adj_preds_plot_tiff(individual_adj_preds_plot)),
-
-  tar_target(main_adj_plot, combine_adj_plots(individual_data_plot, individual_adj_preds_plot, model_adj_plot)),
-
-  # Compare models
-  tar_target(model_comparison_2logBF, compare_models(model, model_adj)),
-
-  # Render the report
-  tar_quarto(report, "report.qmd")
+  # # Add baseline adjustment to data
+  # tar_target(data_adj, add_adj_data(data)),
+  #
+  # # Fit new model adjusting for each participants baseline
+  # tar_target(model_adj, fit_model_adj(data_adj)),
+  # tar_target(tidy_model_adj, get_tidy_model(model_adj)),
+  #
+  # # Model checks
+  # tar_target(model_adj_checks, make_model_adj_checks_tiff(model_adj)),
+  #
+  # # Make and save plots
+  #
+  # tar_target(model_adj_plot, plot_model_adj(data_adj, model_adj)),
+  # tar_target(model_adj_plot_tiff, make_model_adj_plot_tiff(model_adj_plot)),
+  #
+  # tar_target(individual_adj_preds_plot, plot_individual_adj_preds(data_adj, model_adj)),
+  # tar_target(individual_adj_preds_plot_tiff, make_individual_adj_preds_plot_tiff(individual_adj_preds_plot)),
+  #
+  # tar_target(main_adj_plot, combine_adj_plots(individual_data_plot, individual_adj_preds_plot, model_adj_plot)),
+  #
+  # # Compare models
+  # tar_target(model_comparison_2logBF, compare_models(model, model_adj)),
+  #
+  # # Render the report
+  # tar_quarto(report, "report.qmd")
 
 
 )

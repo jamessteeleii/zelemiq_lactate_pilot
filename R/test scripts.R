@@ -37,8 +37,13 @@ data <- lapply(sheets, read_excel, path = file, range = cell_cols(c("B","C","E")
   mutate(max_lactate = max(lactate, na.rm=TRUE)) %>%
   slice(1:max(which(lactate == max_lactate))) %>%
   mutate(time_norm = normalise(rowid),
-         zelemiq_avg = rollmeanr(zelemiq_raw, 10, fill=NA)) %>%
-  select(time_norm, zelemiq_raw, zelemiq_avg, lactate)
+        zelemiq_avg = rollmeanr(zelemiq_raw, 10, fill=NA)) %>%
+  mutate(zelemiq_raw_z = (zelemiq_raw - mean(zelemiq_raw, na.rm=TRUE))/sd(zelemiq_raw, na.rm=TRUE),
+         zelemiq_avg_z = (zelemiq_avg - mean(zelemiq_avg, na.rm=TRUE))/sd(zelemiq_avg, na.rm=TRUE),
+         lactate_z = (lactate - mean(lactate, na.rm=TRUE))/sd(lactate, na.rm=TRUE)) |>
+  ungroup() |>
+  select(id, time_norm, zelemiq_raw, zelemiq_raw_z, zelemiq_avg, zelemiq_avg_z, lactate, lactate_z)
+
 
 
 # rescale and plot time series
@@ -55,19 +60,28 @@ library(scales)
 
 library(ggtext)
 
-ggplot(data, aes(x=time_norm, y=lactate)) +
-  geom_point(aes(y = a + zelemiq_raw*b), color = "#56B4E9",  alpha = 0.1) + # zelemiq
-  geom_smooth(aes(y = a + zelemiq_raw*b), color = "#56B4E9", se=FALSE) + # zelemiq
+data |>
+  ggplot(aes(x=time_norm, y=lactate_z)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_point(aes(y = zelemiq_raw_z), color = "#56B4E9",  alpha = 0.1) + # zelemiq
+  geom_smooth(aes(y = zelemiq_raw_z), color = "#56B4E9", se=FALSE) + # zelemiq
   geom_point(color = "#D55E00", alpha = 0.5) + # lactate
   geom_smooth(se=FALSE, color = "#D55E00") + # lactate
-  scale_y_continuous(bquote("Blood Lactate (mmol\U00B7"~L^-1~")"), sec.axis = sec_axis(~ (. - a)/b, name = "Zelemiq Ltd Output (raw)")) +
   scale_x_continuous("Time (normalised percentage)", labels = percent) +
   facet_wrap("id", nrow = 2) +
-  labs(title = "<span style = 'color: #56B4E9;'>Zelemiq Ltd Ouput</span> and <span style = 'color: #D55E00;'>Blood Lactate from Biosen C-Line</span> during the incremental test",
+  labs(y = "Standardised Value",
+       title = "<span style = 'color: #56B4E9;'>Zelemiq Ltd Ouput</span> and <span style = 'color: #D55E00;'>Blood Lactate from Biosen C-Line</span> during the incremental test",
        caption = "Note: Curves are LOESS smooths") +
   theme_bw() +
   theme(panel.grid=element_blank(),
         plot.title = element_markdown())
+
+
+data |>
+  ggplot(aes(y = log(lactate), x = zelemiq_avg)) +
+  geom_point() +
+  geom_smooth(se=FALSE, method = "lm") +
+  facet_wrap("id")
 
 # mixed model
 # renv::install("lme4")
@@ -76,44 +90,86 @@ library(lme4)
 
 # renv::install("performance")
 
-model <- lmer(lactate ~ zelemiq_avg + (zelemiq_avg | id),
+model <- lmer(lactate_z ~ zelemiq_avg_z + I(zelemiq_avg_z^2) + (zelemiq_avg_z + I(zelemiq_avg_z^2) | id),
               data = data,
-              REML = TRUE)
+              REML = TRUE,
+              control = lmerControl(optimizer="Nelder_Mead"))
+
+
+model <- brm(lactate_z ~ zelemiq_avg_z + I(zelemiq_avg_z^2) + (zelemiq_avg_z | id),
+               data = data
+)
+
+plot(model)
+
+pp_check(model)
+
+performance::check_model(model)
 
 # renv::install("marginaleffects")
 
 library(marginaleffects)
 
-model_preds <- predictions(model,
+model_epred <- predictions(model,
                            newdata = datagrid(id = NA,
-                                              zelemiq_avg = seq(0.4,0.6, by=0.01)),
-                           re.form = NA,
+                                              zelemiq_avg_z = seq(min(data$zelemiq_avg_z, na.rm = TRUE),
+                                                                max(data$zelemiq_avg_z, na.rm = TRUE),
+                                                                by=0.01)),
+                           re_formula = NA,
                            type = "response")
 
-ggplot(model_preds, aes(x = zelemiq_avg, y = estimate)) +
+model_cond_epred <- predictions(model,
+                           newdata = datagrid(id = NA,
+                                              zelemiq_avg_z = seq(min(data$zelemiq_avg_z, na.rm = TRUE),
+                                                                  max(data$zelemiq_avg_z, na.rm = TRUE),
+                                                                  by=0.01)),
+                           re_formula = NULL,
+                           type = "response")
+
+model_preds <- predictions(model,
+                               newdata = datagrid(id = NA,
+                                                  zelemiq_avg_z = seq(min(data$zelemiq_avg_z, na.rm = TRUE),
+                                                                      max(data$zelemiq_avg_z, na.rm = TRUE),
+                                                                      by=0.01)),
+                               type = "prediction")
+
+
+plot_predictions(model, condition = "zelemiq_avg_z",
+                 points = 1,
+                 type = "response")
+
+ggplot() +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_ribbon(aes(ymin=conf.low, ymax=conf.high), alpha = 0.25) +
-  geom_line(size=1) +
-  geom_point(data=data, aes(y=lactate), alpha=0.25) +
-  labs(x = "Zelemiq Ltd Output",
-       y = bquote("Blood Lactate (mmol."~L^-1~")"),
-       title = "Conditional model predictions") +
+  geom_ribbon(data=model_preds, aes(x = zelemiq_avg_z, ymin=conf.low, ymax=conf.high), fill = "#CCCCCC", alpha = 0.5) +
+  geom_ribbon(data=model_cond_epred, aes(x = zelemiq_avg_z, ymin=conf.low, ymax=conf.high), fill = "#999999", alpha = 0.5) +
+  geom_ribbon(data=model_epred, aes(x = zelemiq_avg_z, ymin=conf.low, ymax=conf.high), fill = "#333333", alpha = 0.5) +
+  geom_line(data=model_epred, aes(x = zelemiq_avg_z, y = estimate), size=1) +
+  geom_point(data=data, aes(x = zelemiq_avg_z, y=lactate_z), alpha=1) +
+  labs(x = "Zelemiq Ltd Output (standardised)",
+       y = bquote("Blood Lactate (standardised)"),
+       title = "Model predictions",
+       subtitle = "Interval estimates are, from widest to narrowest: posterior predictions, conditional effects for participants, and global grand mean"
+       ) +
   theme_bw() +
   theme(panel.grid=element_blank(),
-        plot.title = element_markdown())
+        plot.title = element_markdown(),
+        plot.subtitle = element_text(size=8))
 
 
 ind_preds <- predictions(model,
                          newdata = datagrid(id = data$id,
-                                            zelemiq_avg = seq(0.4,0.6, by=0.01)))
+                                            zelemiq_avg_z = seq(min(data$zelemiq_avg_z, na.rm = TRUE),
+                                                                max(data$zelemiq_avg_z, na.rm = TRUE),
+                                                                by=0.01)),
+                         re_formula = NULL)
 
-ggplot(ind_preds, aes(x = zelemiq_avg, y = estimate)) +
+ggplot(ind_preds, aes(x = zelemiq_avg_z, y = estimate)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_ribbon(aes(ymin=conf.low, ymax=conf.high), alpha = 0.25) +
   geom_line(size=1) +
-  geom_point(data=data, aes(y=lactate), alpha=0.25) +
-  labs(x = "Zelemiq Ltd Output",
-       y = bquote("Blood Lactate (mmol."~L^-1~")"),
+  geom_point(data=data, aes(y=lactate_z), alpha=0.25) +
+  labs(x = "Zelemiq Ltd Output (standardised)",
+       y = bquote("Blood Lactate (standardised)"),
        title = "Individual participant level predictions") +
   facet_wrap("id", nrow = 2) +
   theme_bw() +
@@ -126,9 +182,20 @@ data <- data %>%
   group_by(id) %>%
   mutate(zelemiq_avg_adj = zelemiq_avg - first(zelemiq_avg, na_rm = TRUE))
 
-model_adj <- lmer(lactate ~ zelemiq_avg_adj + (zelemiq_avg_adj | id),
-              data = data,
-              REML = TRUE)
+model_adj <- brm(lactate ~ zelemiq_avg_adj + (zelemiq_avg_adj | id),
+             data = data,
+             family = exponential(link = "log")
+)
+
+plot(model_adj)
+
+pp_check(model_adj)
+
+bayestestR::bayesfactor_models(model, model_adj)
+
+# model_adj <- lmer(lactate ~ zelemiq_avg_adj + (zelemiq_avg_adj | id),
+#               data = data,
+#               REML = TRUE)
 
 performance::check_model(model_adj)
 
@@ -137,7 +204,7 @@ model_adj_preds <- predictions(model_adj,
                                               zelemiq_avg_adj = seq(min(data$zelemiq_avg_adj, na.rm = TRUE),
                                                                     max(data$zelemiq_avg_adj, na.rm = TRUE),
                                                                     by=0.01)),
-                           re.form = NA,
+                           re_formula = NA,
                            type = "response")
 
 ggplot(model_adj_preds, aes(x = zelemiq_avg_adj, y = estimate)) +
