@@ -3,7 +3,7 @@ library(targets)
 library(tarchetypes)
 source("R/functions.R")
 tar_option_set(packages = c("here", "readxl", "janitor", "tidyverse", "base", "scales", "ggtext", "zoo",
-                            "performance", "see", "brms", "marginaleffects", "broom.mixed",
+                            "performance", "see", "brms", "bayesplot", "marginaleffects", "broom.mixed",
                             "patchwork", "kableExtra", "knitr", "bayestestR", "quarto", "officer", "officedown",
                             "lactater"))
 
@@ -18,6 +18,11 @@ list(
 
   # Model checks
   tar_target(model_checks, make_model_checks_tiff(model)),
+
+  # # Diagnostic plots
+  tar_target(rhat_model, make_rhat_plot(model)),
+  tar_target(trace_model, make_trace_plots(model)),
+  tar_target(pp_check_model, make_pp_check(model)),
 
   # Calculate thresholds and their agreement
   tar_target(thresholds, calculate_thresholds(data)),
@@ -36,13 +41,16 @@ list(
   tar_target(main_plot, combine_plots(individual_data_plot, individual_preds_plot, model_plot, thresholds_agree_plot)),
 
   tar_target(thresholds_agree_plot, plot_thresholds_agree(thresholds, thresholds_agree)),
-  tar_target(thresholds_agree_plot_tiff, make_thresholds_agree_plot_tiff(thresholds_agree_plot))
+  tar_target(thresholds_agree_plot_tiff, make_thresholds_agree_plot_tiff(thresholds_agree_plot)),
 
 
 
 
   # # Render the report
   # tar_quarto(report, "report.qmd")
+
+  # Render the supplementary material
+  tar_quarto(diagnostics_plots, "diagnostics_plots.qmd")
 
 
 )

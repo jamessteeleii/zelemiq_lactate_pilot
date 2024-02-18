@@ -88,6 +88,19 @@
       ],
       "Hash": "8c7115cd3a0e048bda2a7cd110549f7a"
     },
+    "MatrixModels": {
+      "Package": "MatrixModels",
+      "Version": "0.5-3",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "Matrix",
+        "R",
+        "methods",
+        "stats"
+      ],
+      "Hash": "0776bf7526869e0286b0463cb72fb211"
+    },
     "QuickJSR": {
       "Package": "QuickJSR",
       "Version": "1.1.3",
@@ -133,17 +146,16 @@
     },
     "RcppEigen": {
       "Package": "RcppEigen",
-      "Version": "0.3.3.9.3",
+      "Version": "0.3.3.9.4",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
-        "Matrix",
         "R",
         "Rcpp",
         "stats",
         "utils"
       ],
-      "Hash": "1e035db628cefb315c571202d70202fe"
+      "Hash": "acb0a5bf38490f26ab8661b467f4f53a"
     },
     "RcppParallel": {
       "Package": "RcppParallel",
@@ -154,6 +166,46 @@
         "R"
       ],
       "Hash": "a45594a00f5dbb073d5ec9f48592a08a"
+    },
+    "SimplyAgree": {
+      "Package": "SimplyAgree",
+      "Version": "0.1.2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "boot",
+        "dplyr",
+        "emmeans",
+        "ggplot2",
+        "insight",
+        "jmvcore",
+        "lme4",
+        "magrittr",
+        "nlme",
+        "patchwork",
+        "purrr",
+        "quantreg",
+        "stats",
+        "stringr",
+        "tidyr",
+        "tidyselect"
+      ],
+      "Hash": "9fc24b1c6abc7747081c8d49105c4192"
+    },
+    "SparseM": {
+      "Package": "SparseM",
+      "Version": "1.81",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "graphics",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "2042cd9759cc89a453c4aefef0ce9aae"
     },
     "StanHeaders": {
       "Package": "StanHeaders",
@@ -221,7 +273,7 @@
     },
     "bayesplot": {
       "Package": "bayesplot",
-      "Version": "1.11.0",
+      "Version": "1.11.1",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
@@ -238,7 +290,7 @@
         "tidyselect",
         "utils"
       ],
-      "Hash": "156158a60d3d9c9e41837cb62d12a287"
+      "Hash": "c5cde76012ea08e94265ace1b53b77b9"
     },
     "bayestestR": {
       "Package": "bayestestR",
@@ -1499,6 +1551,21 @@
       ],
       "Hash": "5baae149f1082f466df9d1442ba7aa65"
     },
+    "jmvcore": {
+      "Package": "jmvcore",
+      "Version": "2.4.7",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "R6",
+        "base64enc",
+        "jsonlite",
+        "rlang",
+        "stringi"
+      ],
+      "Hash": "8dc883a0aae27668ce6285c0e4919c9c"
+    },
     "jpeg": {
       "Package": "jpeg",
       "Version": "0.1-10",
@@ -1669,7 +1736,7 @@
     },
     "lme4": {
       "Package": "lme4",
-      "Version": "1.1-34",
+      "Version": "1.1-35.1",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
@@ -1691,7 +1758,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "73ed88b282d27d4cf3d89b744aa21217"
+      "Hash": "07fb0c5b727b15b0ce40feb641498e4e"
     },
     "loo": {
       "Package": "loo",
@@ -2262,6 +2329,24 @@
         "vctrs"
       ],
       "Hash": "1cba04a4e9414bdefc9dcaa99649a8dc"
+    },
+    "quantreg": {
+      "Package": "quantreg",
+      "Version": "5.97",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "MASS",
+        "Matrix",
+        "MatrixModels",
+        "R",
+        "SparseM",
+        "graphics",
+        "methods",
+        "stats",
+        "survival"
+      ],
+      "Hash": "1bbc97f7d637ab3917c514a69047b2c1"
     },
     "quarto": {
       "Package": "quarto",
@@ -2874,6 +2959,22 @@
         "vctrs"
       ],
       "Hash": "671a4d384ae9d32fc47a14e98bfa3dc8"
+    },
+    "survival": {
+      "Package": "survival",
+      "Version": "3.4-0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "Matrix",
+        "R",
+        "graphics",
+        "methods",
+        "splines",
+        "stats",
+        "utils"
+      ],
+      "Hash": "04411ae66ab4659230c067c32966fc20"
     },
     "svglite": {
       "Package": "svglite",
