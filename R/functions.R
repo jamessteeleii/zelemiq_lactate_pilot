@@ -6,11 +6,11 @@ normalise <- function(x) {
 read_prepare_data <- function(file) {
   # file including path if needed
   file <- here("data","Zelemiq Data analysis - JW - all data.xlsx")
-  # read the sheets and only keep the Survey sheets
+  # get the sheets that begin with "P"
   sheets <- excel_sheets(file)
   sheets <- sheets[grep("P", sheets)]
 
-  # read the data, only first 10 columns (A:J)
+  # read the data, only first columns we need
   data <- lapply(sheets, read_excel, path = file, range = cell_cols(c("B","C","E"))) %>%
     bind_rows(.id = "id") %>%
     rowid_to_column() %>%
