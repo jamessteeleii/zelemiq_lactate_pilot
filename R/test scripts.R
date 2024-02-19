@@ -90,13 +90,11 @@ library(lme4)
 
 # renv::install("performance")
 
-model <- lmer(lactate_z ~ zelemiq_avg_z + I(zelemiq_avg_z^2) + (zelemiq_avg_z + I(zelemiq_avg_z^2) | id),
-              data = data,
-              REML = TRUE,
-              control = lmerControl(optimizer="Nelder_Mead"))
+model <- lmer(lactate_z ~ zelemiq_avg_z + I(zelemiq_avg_z^2) + (zelemiq_avg_z | id),
+              data = data)
 
 
-model <- brm(lactate_z ~ zelemiq_avg_z + I(zelemiq_avg_z^2) + (zelemiq_avg_z | id),
+model <- brms::brm(lactate_z ~ zelemiq_avg_z + I(zelemiq_avg_z^2) + (zelemiq_avg_z | id),
                data = data
 )
 
@@ -309,13 +307,13 @@ renv::install("broom.mixed")
 
 tidy_model <- broom.mixed::tidy(model_adj, conf.int=TRUE, conf.method="profile")
 
-R2_adj <- performance::r2_nakagawa(model_adj)
+R2_adj <- performance::r2(model)
 
 R2_adj$R2_marginal
 
 tidy_model_adj <- tidy_model[c(1,2,3,5,4,6),c(1,3,4,7,8)]
 
-ICC_adj <- performance::icc(model_adj)
+ICC_adj <- performance::variance_decomposition(model)
 
 
 ICC_adj[1]

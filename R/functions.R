@@ -29,11 +29,6 @@ read_prepare_data <- function(file) {
 }
 
 plot_individual_data <- function(data) {
-  # rescale and plot time series
-  # ylim.prim <- c(0,8)
-  # ylim.sec <- c(0.4,0.6)
-  # b <- diff(ylim.prim)/diff(ylim.sec)
-  # a <- ylim.prim[1] - b*ylim.sec[1]
 
   data |>
     ggplot(aes(x=time_norm, y=lactate_z)) +
@@ -59,8 +54,17 @@ make_individual_data_plot_tiff <- function(individual_data_plot) {
 }
 
 fit_model <- function(data) {
+
+  # run rstan quicker
+  rstan_options(auto_write = TRUE)
+  options(mc.cores = parallel::detectCores()-1)
+
   model <- brm(lactate_z ~ zelemiq_avg_z + I(zelemiq_avg_z^2) + (zelemiq_avg_z | id),
-               data = data)
+               data = data,
+               seed = 1988,
+               chains = 4,
+               iter = 8000, warmup = 4000,
+               cores = 4)
 }
 
 make_model_checks_tiff <- function(model) {
@@ -173,7 +177,8 @@ combine_plots <- function(individual_data_plot, individual_preds_plot, model_plo
     plot_annotation(tag_level = "A",
                     tag_prefix = "(", tag_suffix = ")") +
     plot_layout(heights = c(10,4)) &
-    theme(axis.title = element_text(size = 13))
+    theme(axis.title = element_text(size = 13),
+          axis.text = element_text(size = 10))
 
   ggsave("plots/main_plot.tiff", width = 20, height = 14, device = "tiff", dpi = 300)
 

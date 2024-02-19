@@ -3,8 +3,8 @@ library(targets)
 library(tarchetypes)
 source("R/functions.R")
 tar_option_set(packages = c("here", "readxl", "janitor", "tidyverse", "base", "scales", "ggtext", "zoo",
-                            "performance", "see", "brms", "bayesplot", "marginaleffects", "broom.mixed",
-                            "patchwork", "kableExtra", "knitr", "bayestestR", "quarto", "officer", "officedown",
+                            "performance", "see", "rstan", "brms", "bayesplot", "marginaleffects", "broom.mixed",
+                            "patchwork", "kableExtra", "knitr", "quarto", "officer", "officedown",
                             "lactater"))
 
 list(
@@ -43,14 +43,11 @@ list(
   tar_target(thresholds_agree_plot, plot_thresholds_agree(thresholds, thresholds_agree)),
   tar_target(thresholds_agree_plot_tiff, make_thresholds_agree_plot_tiff(thresholds_agree_plot)),
 
+  # Render the report
+  tar_quarto(report, "report.qmd")
 
-
-
-  # # Render the report
-  # tar_quarto(report, "report.qmd")
-
-  # Render the supplementary material
-  tar_quarto(diagnostics_plots, "diagnostics_plots.qmd")
+  # # Render the supplementary material
+  # tar_quarto(diagnostics_plots, "diagnostics_plots.qmd")
 
 
 )
