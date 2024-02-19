@@ -318,5 +318,4 @@ ICC_adj <- performance::variance_decomposition(model)
 
 ICC_adj[1]
 
-targets::tar_visnetwork(targets_only = TRUE) %>%
-  visNetwork::visExport()
+visNetwork::visSave(targets::tar_visnetwork(targets_only = TRUE),"visnetwork.html")
