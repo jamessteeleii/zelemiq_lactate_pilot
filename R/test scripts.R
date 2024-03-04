@@ -22,17 +22,9 @@ normalise <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
 }
 
-# file including path if needed
-file <- here("data","Zelemiq Data analysis - JW - all data.xlsx")
-# read the sheets and only keep the Survey sheets
-sheets <- excel_sheets(file)
-sheets <- sheets[grep("P", sheets)]
+data <- read_csv("data.csv")
 
-# read the data, only first 10 columns (A:J)
-data <- lapply(sheets, read_excel, path = file, range = cell_cols(c("B","C","E"))) %>%
-  bind_rows(.id = "id") %>%
-  rowid_to_column() %>%
-  clean_names() %>%
+data %>%
   group_by(id) %>%
   mutate(max_lactate = max(lactate, na.rm=TRUE)) %>%
   slice(1:max(which(lactate == max_lactate))) %>%

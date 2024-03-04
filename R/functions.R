@@ -4,17 +4,10 @@ normalise <- function(x) {
 }
 
 read_prepare_data <- function(file) {
-  # file including path if needed
-  file <- here("data","Zelemiq Data analysis - JW - all data.xlsx")
-  # get the sheets that begin with "P"
-  sheets <- excel_sheets(file)
-  sheets <- sheets[grep("P", sheets)]
 
-  # read the data, only first columns we need
-  data <- lapply(sheets, read_excel, path = file, range = cell_cols(c("B","C","E"))) %>%
-    bind_rows(.id = "id") %>%
-    rowid_to_column() %>%
-    clean_names() %>%
+  data <- read_csv(file)
+
+  data %>%
     group_by(id) %>%
     mutate(max_lactate = max(lactate, na.rm=TRUE)) %>%
     slice(1:max(which(lactate == max_lactate))) %>%
@@ -306,7 +299,17 @@ calculate_thresholds_agree <- function(thresholds) {
                                 ccc_lower = agree$ccc.xy$lower.ci,
                                 ccc_upper = agree$ccc.xy$upper.ci
 
-                              )
+                              ) |>
+                                mutate(method_category = case_when(
+                                  method == "Dmax" ~ "Dmax",
+                                  method == "Exp-Dmax" ~ "Dmax",
+                                  method == "ModDmax" ~ "Dmax",
+                                  method == "LTP1" ~ "LTP",
+                                  method == "LTP2" ~ "LTP",
+
+                                ),
+                                method = str_replace(method, "LTP", "LT")
+                                )
     )
   }
   return(thresholds_agree)
@@ -315,6 +318,7 @@ calculate_thresholds_agree <- function(thresholds) {
 plot_thresholds_agree <- function(thresholds, thresholds_agree) {
   thresholds |>
     filter(str_detect(method, pattern = "Log", negate = TRUE)) |>
+    mutate(method = str_replace(method, "LTP", "LT")) |>
     ggplot(aes(x = intensity_lactate, y = intensity_zelemiq)) +
     geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
     geom_point() +
@@ -349,7 +353,7 @@ plot_thresholds_agree <- function(thresholds, thresholds_agree) {
               y = 110,
               size = 2.5
     ) +
-    facet_grid(.~method) +
+    facet_nested(.~method_category + method) +
     labs(x = "Threshold determined by blood lactate (Watts)",
          y = "Threshold determined by Zelemiq Ltd (Watts)",
          title = "Agreement of thresholds") +
