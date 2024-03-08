@@ -299,25 +299,35 @@ calculate_thresholds_agree <- function(thresholds) {
                                 ccc_lower = agree$ccc.xy$lower.ci,
                                 ccc_upper = agree$ccc.xy$upper.ci
 
-                              ) |>
-                                mutate(method_category = case_when(
-                                  method == "Dmax" ~ "Dmax",
-                                  method == "Exp-Dmax" ~ "Dmax",
-                                  method == "ModDmax" ~ "Dmax",
-                                  method == "LTP1" ~ "LTP",
-                                  method == "LTP2" ~ "LTP",
-
-                                ),
-                                method = str_replace(method, "LTP", "LT")
-                                )
+                              )
     )
   }
   return(thresholds_agree)
 }
 
 plot_thresholds_agree <- function(thresholds, thresholds_agree) {
+
+  thresholds_agree <- thresholds_agree |>
+    mutate(method_category = case_when(
+      method == "Dmax" ~ "Dmax",
+      method == "Exp-Dmax" ~ "Dmax",
+      method == "ModDmax" ~ "Dmax",
+      method == "LTP1" ~ "Breakpoints",
+      method == "LTP2" ~ "Breakpoints"
+    )
+    )|>
+    mutate(method = str_replace(method, "LTP", "LT"))
+
   thresholds |>
     filter(str_detect(method, pattern = "Log", negate = TRUE)) |>
+    mutate(method_category = case_when(
+      method == "Dmax" ~ "Dmax",
+      method == "Exp-Dmax" ~ "Dmax",
+      method == "ModDmax" ~ "Dmax",
+      method == "LTP1" ~ "Breakpoints",
+      method == "LTP2" ~ "Breakpoints"
+      )
+    )|>
     mutate(method = str_replace(method, "LTP", "LT")) |>
     ggplot(aes(x = intensity_lactate, y = intensity_zelemiq)) +
     geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
