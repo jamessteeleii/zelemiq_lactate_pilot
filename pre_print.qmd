@@ -1,0 +1,279 @@
+---
+articletitle: |
+ The validity of a non-invasive blood lactate sensor
+format: 
+ sportrxiv-pdf:
+  include-in-header:
+   text: |
+    \usepackage[font=scriptsize]{caption}
+    \usepackage{lscape}
+    \newcommand{\blandscape}{\begin{landscape}}
+    \newcommand{\elandscape}{\end{landscape}}
+author:
+ - name: James Wright
+   affiliations:
+   - ref: 1
+   orcid: 0000-0002-6891-1789
+   corresponding: true
+   email: james.wright@solent.ac.uk
+ - name: Rodney Lane
+   affiliations:
+   - ref: 2
+   orcid: 0000-0003-2689-5415
+ - name: Rebecca Blake
+   affiliations:
+   - ref: 1
+   orcid: 0009-0000-3720-5091
+ - name: Lee Bridgeman
+   affiliations:
+   - ref: 1
+   orcid: 0000-0002-7605-4289
+ - name: James Steele
+   affiliations:
+   - ref: 1
+   orcid: 0000-0002-8003-0757
+
+affiliations:
+   - id: 1
+     name: Department of Sport and Health, Solent University, UK
+   - id: 2
+     name: Zelemiq Ltd, Salisbury, UK
+abstract: |
+ Blood lactate is routinely measured in endurance athletes to determine the physiological responses to exercise. The blood lactate profile allows the determination of thresholds that can be used to inform training and is often reported as the corresponding heart rate, speed, or power output. Wearable technology development has allowed blood lactate to be estimated in real-time rather than being restricted to laboratory-based testing during a single session. Following institutional ethical approval, eight male participants provided written informed consent to take part in this study. Each participant completed a lactate threshold testing protocol, starting at an intensity of 100 W, with 25 W increments observed every three minutes. At the end of each stage, a capillary blood lactate sample was taken (Biosen C-Line, Sport). Throughout testing, it was anticipated that blood lactate could be estimated using bioimpedance spectroscopy (Zelemiq, UK sensor). There were two aspects of data analysis: firstly, to determine the predictive quality of blood lactate values from the Zelemiq sensor, and secondly, to observe the agreement of lactate thresholds derived from capillary blood lactate and the Zelemiq sensor values. Both Zelemiq and blood lactate values were standardised within participants, with results demonstrating an exponential quadratic relationship. The greatest agreement in threshold detection was observed when using the ModDmax method with a bias of -0.95 [95% confidence interval: -13.85, 11.95] W. Further work is required to determine the baseline variation between participants and test the quadratic model.
+license-type: ccby # change if neccessary
+# year: 2025 # defaults to current year
+# keywords: [threshold, intensity domains, training, cycling, endurance] # optional
+# optional link to Supplementary Material:
+suppl-link: https://osf.io/kf9r3/
+reference-section-title: References
+printnote: "PREPRINT - NOT PEER REVIEWED" # if post print, include "POSTPRINT" then link to the published article
+bibliography: references.bib 
+pdf-engine: xelatex
+execute: 
+ echo: false
+ message: false
+ warning: false
+---
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+#| include: false
+
+knitr::opts_chunk$set(echo = TRUE, fig.align="center")
+# options(knitr.kable.NA = '')
+# options(kableExtra.auto_format = FALSE)
+# options(knitr.table.format = "latex")
+
+library(tidyverse)
+library(kableExtra)
+library(ggtext)
+library(patchwork)
+
+```
+
+# Introduction
+When describing the physiological responses to exercise, it is common to refer to four exercise intensity domains; termed moderate, heavy, severe, and extreme [@pooleResolvingDeterminantsHighintensity2009; @burnleyPowerDurationRelationship2018a]. It is widely accepted that the demarcation between the moderate and heavy exercise intensity domains is defined by the lactate threshold (LT) [@jonesCriticalPowerImplications2010]. Blood lactate concentrations may initially rise temporarily at the onset of exercise below the LT but will quickly return close to resting values if exercise is maintained within the moderate exercise intensity domain [@fergusonLactateMetabolismHistorical2018]. It is not until exercise rises above this threshold (i.e. within the heavy exercise intensity domain) for an extended duration that the onset of metabolic acidosis and, ultimately, fatigue ensues [@gaesserSlowComponentOxygen1996; @davisComparisonThreeMethods2007]. It has been suggested that LT typically occurs at 50–65% of an individual’s V̇O2max and is influenced by training status [@pooleCriticalPowerImportant2016]. It is, therefore, important to regularly monitor an individual’s LT when using this metric for informing training and race strategy. The LT test is a commonly performed laboratory-based testing protocol in sports science [@faudeLactateThresholdConcepts2009]. Typically, protocols use capillary blood sampling from the fingertip or earlobe to allow the plotting of blood lactate levels against increasing speed or power output. The LT test allows the determination of two key thresholds: the lactate threshold (LT1), which represents the initial rise in blood lactate from baseline values, and the lactate turnpoint (LT2), represented by a sharp increase in blood lactate leading to exhaustion [@estonKinanthropometryExercisePhysiology2013].
+
+Several methods can be used to determine an individual’s thresholds, which can potentially cause some confusion within the literature, and it is known that both stage length and increment size can affect when this threshold occurs [@faudeLactateThresholdConcepts2009]. Commonly used methods for analysing a LT profile include visual inspection and fixed values; however, it is widely accepted that fixed values should be avoided due to the large variations observed between individuals. One of the challenges when interpreting a LT profile is that the wide range of methods for analysing LT will result in different results, and it has been reported that no deflection point is observed in approximately 30% of profiles [@chengNewApproachDetermination1992]. For the purposes of this paper, LT will be determined from Breakpoints (LT1 and LT2) and Dmax methods (Dmax, Exp-Dmax, and ModDmax) [@jamnickManipulatingGradedExercise2018].
+
+LT has been reported as the gold standard measure of aerobic performance [@faudeLactateThresholdConcepts2009]. Traditionally, LT testing has been completed in a laboratory setting using an ergometer suitable for the individual athlete (e.g., bike). It is acknowledged, however, that completing testing in a laboratory will reduce the ecological validity of the results obtained, and this may impact how they can be transferred to training or race environments. The introduction of portable lactate analysers has allowed the determination of LT with a field-based setting using the athlete’s personal equipment (e.g., bike and power meter). One of the most used portable analysers, the Lactate Pro, has been reported to provide reliable measures of blood lactate when compared to laboratory systems (r > 0.97) [@pyneEvaluationLactatePro2000]. Although LT testing can occur in laboratory and field settings, estimating blood lactate in real time would benefit athletes and coaches, reducing the need for frequent and potentially costly testing using consumables such as test strips. Despite LT testing being used to inform training and race strategy, a typical testing protocol will only provide information about an individual on a specific testing day. With LT being sensitive to exercise intensity and duration [@benekeBloodLactateDiagnostics2011], it could be suggested that regular testing is advised.
+
+The interest in wearable technology has increased within sport science, and systems, such as heat rate monitors and activity monitors, are accessible to athletes of all standards. The interest in real-time lactate monitoring saw the development of the first wearable LT device, the BSX Insight, which uses near-infrared LED technology to estimate LT. Research by Driller et al. [-@drillerEvaluatingNewWearable2016] and Borges and Driller [-@borgesWearableLactateThreshold2016] have provided some evidence for the use of the BSX Insight during cycling and running. A more recent study, however, has suggested that this system significantly overestimates the speed at which LT occurs during running [@parisiComparisonWearableLactate2022]. It was highlighted that knowledge of an individual’s LT is useful for training prescription, but the risk of overestimation would lead to early fatigue [@parisiComparisonWearableLactate2022].  
+
+Therefore, the aim of this study was to assess the accuracy of a novel non-invasive blood lactate analyser during incremental cycling. 
+
+# Materials and Methods
+
+## Participants
+Eight male participants (mean ± SD; age: 31 ± 8 years; stature: 1.78 ± 0.10 m; mass: 77.63 ± 12.37 kg) volunteered to participate in this study. Before commencing testing, all participants were fully informed about the procedures, possible risks, and purpose of the study. All participants completed a health questionnaire and provided informed written consent. The host university ethics committee approved this study.
+
+## Procedures
+Participants were asked to refrain from training 48 hours before testing and avoid caffeine consumption for at least two hours before testing. Before the warm-up, a resting capillary blood lactate sample was taken from the participant's finger for analysis (Biosen, C-Line, Germany). The cycle ergometer (Excalibur Sport, Lode, Germany) was adjusted for each participant, and a heart rate (HR) monitor (H10, Polar, Finland) was fitted. The wearable lactate sensor used in this study (Zelemiq, UK) was fitted on the posterior upper arm just above the elbow joint by a strap attached to the device and further secured with tubigrip to prevent movement during testing. The Zelemiq device measured 60 mm in length and 30 mm in width and is an enhanced bioimpedance spectroscopy sensor. Bioimpedance spectroscopy is a non-invasive technique that measures the electrical impedance of biological tissues across a range of frequencies. The device used in this study was optimised to measure frequencies below 20 kHz and calibrated to sample every 30 s.  At the start of each 30-s epoch, 10 bioimpedance measurements were made over a 1-s period (10 Hz). These 10 sensor readings were then post-processed and allowed the calculation of the average values recorded by the sensor at the start of every 30-s period during the lactate threshold testing.  During testing, these measurements were buffered within the sensor's internal memory, with wireless telemetry used to transfer them to a PC running a data capture and display application.  To ensure that no data was lost in the event of a telemetry error, the measurements were timestamped and written to a file within the sensor's internal memory. These timestamps were used to align the Zelemiq sensor data to the work rate data (LEM10, Lode, Germany) and blood lactate measurements.  
+
+Before each test, the participants completed a 5-minute warm-up (50 W) on the ergometer at a self-selected cadence between 80-100 revs·min-1. Upon completion of the warm-up, another capillary blood sample was taken. The test then started at an intensity of 100 W and increased by 25 W every three minutes, with capillary blood samples taken from the finger for further analysis at the end of every stage. The test was terminated when the authors observed a 2nd sudden and sustained increase in blood lactate. The participants were not asked to cycle to volitional exhaustion to ensure they could complete a full three-minute stage before test termination.
+
+## Statistical Analysis
+
+The present analysis was not pre-registered as we had no a priori hypotheses and thus, given the pilot nature of this study, was considered exploratory. Inferential statistics were treated as highly unstable local descriptions of the relations between model assumptions and data in order to acknowledge the inherent uncertainty in drawing generalised inferences from single and small samples [@amrheinInferentialStatisticsDescriptive2019]. For all analyses we opted to avoid dichotomising the existence of effects and therefore did not employ traditional null hypothesis significance testing on parameter estimates [@amrheinScientistsRiseStatistical2019; @mcshaneAbandonStatisticalSignificance2019]. Instead, we opted to take a model- [@sterbaAlternativeModelBasedDesignBased2009] and estimation-based approach [@cummingNewStatisticsWhy2014]. For all analyses model parameter estimates and their precision, along with conclusions based upon them, were interpreted continuously and probabilistically, considering data quality, plausibility of effect, and previous literature, all within the context of each model. We focused primarily on qualitative examination of our results based on visualization of the data and models for fixed effects, and exploration of variances using random effects and visualising individual participant level model predictions.All analysis was performed in R (version 4.2.2, The R Foundation for Statistical Computing, 2022) and all data and code is presented in the supplementary materials (https://osf.io/kf9r3/).All data visualisations were made using `ggplot2` [@wickhamGgplot2CreateElegant2022] and the `patchwork` package [@pedersenPatchworkComposerPlots2022]. The aim of our analysis was to explore how well the Zelemiq sensor device predicted blood lactate levels as measured from capillary samples by the Biosen C-Line, in addition to the agreement between lactate thresholds detected using either device. Both Zelemiq and blood lactate values were standardised within participants (i.e., clusters) by subtracting the participants mean and dividing by their standard deviation. Thus Zelemiq and blood lactate values were expressed in participants standard deviation units. A rolling mean was also calculated from the standardised Zelemiq raw data using a 10 sample window prior to the corresponding blood lactate values at that time point. 
+
+### Prediction of blood lactate values from Zelemiq values
+We firstly explored whether the Zelemiq values were able to predict the corresponding blood lactate values. The dependent variable in our model was therefore the standardised blood lactate levels, and the independent predictor variable was the standardised rolling average of the Zelemiq sensor data. Visual exploration of the data suggested a non-linear relationship between the two and so we opted to fit the Zelemiq values with a second-order polynomial function. A maximal (i.e., with random intercepts and slopes for both linear and quadratic terms) linear mixed effect model was estimated initially using Restricted Maximal Likelihood with the `lme4` package [@batesLme4LinearMixedEffects2023] however this obtained a singular fit and even reduced models did not avoid this (other model checks for this structure are available in the supplementary materials - [https://osf.io/98ey6](https://osf.io/98ey6)). As such we refit the model using a Bayesian approach employing weakly regularising default priors to allow for estimation of the random effects using the `brms` package [@burknerBrmsPackageBayesian2017]. The inclusion of random effects for the quadratic term however resulted in large $\hat{R}$ values suggested chains had not converged and thus we removed this keeping on the linear term as a random slope. With the Zelemiq sensor data as a fixed second-order polynomial effect, and allowing random intercepts and random linear slopes by participant id, the model equation was as follows where $\operatorname{Lactate}^*$ and $\operatorname{Zelemiq}^*$ indicate they are the standardised variables:
+
+$$
+\begin{aligned}
+  \operatorname{Lactate}^*_{i}  &\sim N \left(\alpha_{j[i]} + \beta_{1j[i]}(\operatorname{Zelemiq}) + \beta_{2}(\operatorname{Zelemiq^2}), \sigma^2 \right) \\    
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &\alpha_{j} \\
+      &\beta_{1j}
+    \end{aligned}
+  \end{array}
+\right)
+  &\sim N \left(
+\left(
+  \begin{array}{c} 
+    \begin{aligned}
+      &\mu_{\alpha_{j}} \\
+      &\mu_{\beta_{1j}}
+    \end{aligned}
+  \end{array}
+\right)
+, 
+\left(
+  \begin{array}{cc}
+     \sigma^2_{\alpha_{j}} & \rho_{\alpha_{j}\beta_{1j}} \\ 
+     \rho_{\beta_{1j}\alpha_{j}} & \sigma^2_{\beta_{1j}}
+  \end{array}
+\right)
+ \right)
+    \text{, for id j = 1,} \dots \text{,J}
+\end{aligned}
+$$
+
+
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+
+targets::tar_load(model_comparison_2logBF)
+
+```
+
+All parameters in the model had $\hat{R}$ values $\leq{1.01}$, trace plots demonstrated chain convergence, and the posterior predictive checks appeared appropriate (see [https://osf.io/e782c](https://osf.io/e782c])). Given the novelty of the Zelemiq sensor device we did not have a clear intuition or informed opinion about what priors to set and so opted to use the default weakly regularising priors merely to allow for random effects estimation and "let the data speak". Four Monte Carlo Markov Chains with 4000 warmup and 4000 sampling iterations were used in each model. Model predictions and 95% quantile intervals were visualised for both the global grand mean (i.e., the expectation of the posterior predictive distribution for the parameter ignoring cluster effects) in addition to the conditional effects (i.e., including cluster effects) and the posterior predictions, and also at the individual participant level using the `marginaleffects` package [@arel-bundockMarginaleffectsMarginalEffects2022]. The standarised raw Zelemiq sensor data (i.e., unaveraged) was also visualised alongside the standardised blood lactate data.
+
+### Agreement of lactate thresholds detected using blood lactate values compared to Zelemiq values
+We used the `lactater` package [@maturanaLactaterToolsAnalyzing2023] for the detection of blood lactate thresholds. We similarly used the standardised blood lactate and Zelemiq averaged values (i.e., $\operatorname{Lactate}^*$ and $\operatorname{Zelemiq}^*$ from the model described above) and as such did not explore threshold detection methods which relied on log transformations of the lactate response because of negative standardised values. For both blood lactate and Zelemiq values we determined thresholds for watts on the cycle ergometer using the Dmax, Exp-Dmax, ModDmax, and both LTP1 and LTP2 methods [@jamnickManipulatingGradedExercise2018]. We then examined the agreement between the watts at which each threshold was detected between the blood lactate and the Zelemiq values using the Bland-Altman 95% limits of agreement in addition to the concordance correlation coefficient ($\rho_{CCC}$) calculated using the `SimpleAgree` package [@caldwellSimplyAgreeFlexibleRobust2022a]. Frequentist confidence intervals for the bias and  $\rho_{CCC}$ were calculated at the 95% level and for the upper and lower limits of agreement at the 90% level.
+
+# Results
+## Prediction of blood lactate values from Zelemiq values
+
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+
+targets::tar_load(tidy_model)
+
+tidy_model <- tidy_model[c(4,5,7,8)] |>
+    mutate_if(is.numeric, round, 2)
+
+tidy_model$term <- recode(tidy_model$term,
+                        "(Intercept)" = "$Intercept$",
+                        "zelemiq_avg_z" = "$\\operatorname{Zelemiq}^*_{linear\\space term}$",
+                        "Izelemiq_avg_zE2" = "$\\operatorname{Zelemiq}^*_{quadratic\\space term}$",
+                        "sd__(Intercept)" = "$\\sigma_{Intercept}$",  
+                        "sd__zelemiq_avg_z" = "$\\sigma_{\\operatorname{Zelemiq}^*_{linear\\space term}}$",
+                        "cor__(Intercept).zelemiq_avg_z" = "$\\rho_{Intercept:\\operatorname{Zelemiq}^*_{linear\\space term}}$",
+                        "sd__Observation" = "$\\sigma_{Residual}$")
+
+tidy_model <- as.data.frame(tidy_model)
+
+```
+
+Model parameters estimates and 95% quantile intervals are shown in @tbl-model and @fig-model panel (A) shows the raw data and model predictions for each individual participant in addition to the participant level in panel (B) and model predictions in panel (C). The $\operatorname{Zelemiq}^*_{linear\space term}$ indicated that  the rate of change in blood lactate at a standardised Zelemiq value of zero was `r tidy_model[[2,2]]` [95% quantile interval: `r tidy_model[2,3]`, `r tidy_model[[2,4]]`] and the positive $\operatorname{Zelemiq}^*_{quadratic\space term}$ was `r tidy_model[[3,2]]` [95% quantile interval: `r tidy_model[3,3]`, `r tidy_model[[3,4]]`] indicating a convex curve. Thus, blood lactate in standardised units increased exponentially with increasing Zelemiq standardised values. The random effects parameter estimates from the Bayesian model were negligible as expected given the singularity of the Frequentist model fit with Restricted Maximum Likelihood. The majority of variance in the model was attributable to the residual variation. 
+
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+#| label: tbl-model 
+#| tbl-cap-location: "top"
+#| tbl-cap: Model parameter estimates for both fixed and random effects.
+
+
+knitr::kable(
+  tidy_model,
+  align = c("l","c","c","c"),
+  col.names = c("Model Term",
+                "Estimate",
+                "Lower 95\\% QI",
+                "Upper 95\\% QI"
+                ),
+  escape = FALSE, 
+  booktabs = TRUE
+ 
+) |>
+  footnote(general = c("QI = quantile interval","Note, estimates are in standard deviation units at the individual participant level.")
+           ) |>
+  row_spec(0, bold = TRUE) |>
+  kable_classic(full_width = FALSE) |>
+  pack_rows("Fixed Effects", 1,3) |>
+  pack_rows("Random Effects", 4,7) |>
+  kableExtra::kable_styling()
+
+```
+
+\newpage
+
+\blandscape
+```{r}
+#| message: false
+#| warning: false
+#| echo: false
+#| label: fig-model 
+#| fig-width: 20
+#| fig-height: 14
+#| fig-cap: Panel (A) shows the standardised values for raw Zelemiq sensor output and Biosen C-Line blood lactate during the course of the incremental test where time has been normalised to 0-100% of the test duration and a locally estimated scatter smooth (LOESS) curve for each has been performed; panel (B) shows the individual participant level predicted values (thick lines) with 95% quantile intervals (ribbons) from the fitted model; panel (C) shows the global grand mean estimate (thick line) from the model with 95% quantile interval (dark grey ribbon) in addition to intervals for the conditional effects including the random effects of participants (lighter grey ribbon) and the posterior predictions (lightest grey ribbon). Individual points in each panel are the individual observed values of data; and panel (D) shows the scatterplots of lactate thresholds detected from either Zelemiq or blood lactate values using Dmax, Exp-Dmax, LT1, LT2, and ModDmax.
+
+targets::tar_load(individual_data_plot)
+targets::tar_load(individual_preds_plot)
+targets::tar_load(model_plot)
+targets::tar_load(thresholds_agree_plot)
+
+(((individual_data_plot / individual_preds_plot) | model_plot) / thresholds_agree_plot) +
+    plot_annotation(tag_level = "A",
+                    tag_prefix = "(", tag_suffix = ")") +
+    plot_layout(heights = c(10,4)) &
+    theme(axis.title = element_text(size = 13),
+          axis.text = element_text(size = 10))
+```
+\elandscape
+
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+
+targets::tar_load(model)
+
+```
+
+## Agreement of lactate thresholds detected using blood lactate values compared to Zelemiq values
+```{r} 
+#| message: false
+#| warning: false
+#| echo: false
+
+targets::tar_load(thresholds_agree) 
+
+thresholds_agree <- thresholds_agree |>
+    mutate_if(is.numeric, round, 2)
+
+```
+
+Scatterplots of lactate thresholds calculated from either blood lactate or from the Zelemiq values using either Dmax, Exp-Dmax, LTP1, LTP2, or ModDmax can be see in @fig-model panel (D). In comparing the two devices there appeared to be the greatest agreement in threshold detected when using the ModDmax method with a bias of `r thresholds_agree[2,2]` [95% confidence interval: `r thresholds_agree[2,3]`, `r thresholds_agree[2,4]`] Watts and lower and upper 95% limits of agreement of bias of `r thresholds_agree[2,5]` [95% confidence interval: `r thresholds_agree[2,6]`, `r thresholds_agree[2,7]`] and bias of `r thresholds_agree[2,8]` [95% confidence interval: `r thresholds_agree[2,9]`, `r thresholds_agree[2,10]`] Watts respectively. For the ModDmax method the $\rho_{CCC}$ = `r thresholds_agree[2,11]` [95% confidence interval: `r thresholds_agree[2,12]`, `r thresholds_agree[2,13]`].
+
+
+# Discussion
+
+This study aimed to assess the accuracy of a novel non-invasive blood lactate analyser during incremental cycling. Initial results from this pilot study would suggest that the greatest agreement in threshold detection was observed when using the ModDmax, which aligns with LT2 (i.e., the second break point in blood lactate). The weakest agreement was observed for LT1, where blood lactate initially rises from baseline. It should be noted, however, that the limits of agreement were wide for all thresholds, and this is something that should be considered for future development of this product. The results highlighted variation between individuals in the raw Zelemiq sensor baseline values at rest, which was accounted by standardising within participants for during analysis. It was not clear, however, if the baseline would vary for each participant between different occasions and this is an area that requires further investigation before a standard adjustment could be incorporated within the system. 
+
+It is not intended for this device to be used in the medical field and, therefore, the absolute prediction of blood lactate is less important. However, there did appear to be a fairly clear quadratic relationship between the standardised lactate and Zelemiq values which requires further out of sample testing in future research. In a sporting context, the practical application of this device would be primarily to identify different deflection points in blood lactate during exercise, which can be used to inform training and race strategy. These thresholds could then be presented to the athlete in real-time based on heart rate, speed, or power output for the purposes of exercising within the optimal exercise intensity domain. It is recognised that there are several methods for determining an individual’s threshold [11,26]. For endurance athletes, the initial rise from baseline (e.g., LT1) would be of significant importance as this would identify the upper region of the moderate intensity domain where exercise can be sustained for several hours [2]. Considering that the weakest agreement was observed for this threshold, additional development is required to identify where the processing of the Zelemiq sensor can be adjusted. 
+
+# Conclusion
+This pilot study demonstrates a proof of concept for the Zelemiq sensor as a non-invasive system for estimating blood lactate and an individual’s exercise thresholds. The strongest agreement in threshold detection was observed when using the ModDmax method, and the weakest agreement was observed when using LT1. Further research should focus on how the sensor works with different demographics (e.g., sex, ethnicity) and the impact of conditions such as hydration status or sweat rate. Additionally, future developments should focus on reducing the overall size of the Zelemiq sensor and incorporating technology to allow live feedback within a watch or cycling computer. 
+
+# Contributions
+
+JW and RL conceived of and designed the study, acquired the data, interpreted the results, and drafted the manuscript. RB and LB contributed to acquiring the data, interpretation of the results, and revision of the manuscript. JS contributed the data analysis, interpretation of the results, and revision of the manuscript. All authors provided final approval of the version to be published.
+
+# Conflict of Interest Statement
+
+RL is the CEO of Zelemiq Ltd and provided the equipment used within this study. No other financial or other support was provided by RL or Zelemiq Ltd. JW, RB, LB and JS have no relevant conflicts of interest to declare.
+
+# Data and Supplementary Material Accessibility
+
+All extracted data and code utilised for data preparation and analyses are available in either the Open Science Framework page for this project [https://osf.io/kf9r3/](https://osf.io/kf9r3/) or the corresponding GitHub repository [https://github.com/jamessteeleii/zelemiq_lactate_pilot](https://github.com/jamessteeleii/zelemiq_lactate_pilot). All supplementary files are also available there.
