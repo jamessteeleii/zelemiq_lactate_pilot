@@ -33,7 +33,7 @@ plot_individual_data <- function(data) {
     scale_x_continuous("Time (normalised percentage)", labels = percent) +
     facet_wrap("id", nrow = 2) +
     labs(y = "Standardised Value",
-         title = "Standardised values for <span style = 'color: #56B4E9;'>Zelemiq Ltd Output</span> and <span style = 'color: #D55E00;'>Blood Lactate from Biosen C-Line</span> during the incremental test",
+         title = "Standardised values for <span style = 'color: #56B4E9;'>Wearable Sensor Output</span> and <span style = 'color: #D55E00;'>Lab-Based Blood Lactate</span> during the incremental test",
          caption = "Note: Curves are LOESS smooths") +
     theme_bw() +
     theme(panel.grid=element_blank(),
@@ -119,8 +119,8 @@ plot_model <- function(data, model) {
     geom_ribbon(data=model_epred, aes(x = zelemiq_avg_z, ymin=conf.low, ymax=conf.high), fill = "#333333", alpha = 0.5) +
     geom_line(data=model_epred, aes(x = zelemiq_avg_z, y = estimate), linewidth=1) +
     geom_point(data=data, aes(x = zelemiq_avg_z, y=lactate_z), alpha=1) +
-    labs(x = "Zelemiq Ltd Output (standardised)",
-         y = bquote("Blood Lactate (standardised)"),
+    labs(x = "Wearable Sensor Output (standardised)",
+         y = bquote("Lab-Based Blood Lactate (standardised)"),
          title = "Model predictions",
          subtitle = "Interval estimates are, from widest to narrowest: posterior predictions, conditional effects for participants, and global grand mean"
     ) +
@@ -149,8 +149,8 @@ plot_individual_preds <- function(data, model) {
     geom_ribbon(aes(ymin=conf.low, ymax=conf.high), alpha = 0.25) +
     geom_line(size=1) +
     geom_point(data=data, aes(y=lactate_z), alpha=0.25) +
-    labs(x = "Zelemiq Ltd Output (standardised)",
-         y = bquote("Blood Lactate (standardised)"),
+    labs(x = "Wearable Sensor Output (standardised)",
+         y = bquote("Lab-Based Blood Lactate (standardised)"),
          title = "Individual participant level predictions") +
     facet_wrap("id", nrow = 2) +
     theme_bw() +
@@ -364,8 +364,8 @@ plot_thresholds_agree <- function(thresholds, thresholds_agree) {
               size = 2.5
     ) +
     facet_nested(.~method_category + method) +
-    labs(x = "Threshold determined by blood lactate (Watts)",
-         y = "Threshold determined by Zelemiq Ltd (Watts)",
+    labs(x = "Threshold Determined by Lab-Based Blood Lactate (Watts)",
+         y = "Threshold Determined by Wearable Sensor (Watts)",
          title = "Agreement of thresholds") +
     theme_bw() +
     theme(panel.grid=element_blank(),
